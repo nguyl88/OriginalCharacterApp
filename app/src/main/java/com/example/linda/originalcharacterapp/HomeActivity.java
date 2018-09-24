@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.view.View;
 
 
@@ -19,6 +20,22 @@ import android.view.View;
 //If network is included, then I will add the search bar to search for other users in the database
 
 public class HomeActivity extends AppCompatActivity {
+    // references to our images
+    private Integer[] mThumbIds = new Integer[]{
+            R.drawable.sample_2, R.drawable.sample_3,
+            R.drawable.sample_4, R.drawable.sample_5,
+            R.drawable.sample_6, R.drawable.sample_7,
+            R.drawable.sample_0, R.drawable.sample_1,
+            R.drawable.sample_2, R.drawable.sample_3,
+            R.drawable.sample_4, R.drawable.sample_5,
+            R.drawable.sample_6, R.drawable.sample_7,
+            R.drawable.sample_0, R.drawable.sample_1,
+            R.drawable.sample_2, R.drawable.sample_3,
+            R.drawable.sample_4, R.drawable.sample_5,
+            R.drawable.sample_6, R.drawable.sample_7
+    };
+
+    private ImageView imageSelection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +48,9 @@ public class HomeActivity extends AppCompatActivity {
         ImageButton searchB = (ImageButton) findViewById(R.id.searchButton);
         ImageButton logoutB = (ImageButton) findViewById(R.id.logoutButton);
 
-
+      //  imageSelection = findViewById(R.id.selectImage);
         GridView gridview = (GridView) findViewById(R.id.user_grid_view);
-        gridview.setAdapter(new ImageAdapter(this));
+        gridview.setAdapter(new ImageAdapter(this, mThumbIds));
 
         gridview.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -43,7 +60,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-
-
     }
+
 }

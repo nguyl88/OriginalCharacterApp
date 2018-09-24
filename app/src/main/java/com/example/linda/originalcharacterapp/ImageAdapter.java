@@ -3,17 +3,24 @@ package com.example.linda.originalcharacterapp;
 import android.view.LayoutInflater;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
 
 public class ImageAdapter extends BaseAdapter{
-    private Context mContext;
+    private Context context;
+//    private String[] thumbNames;
+    // references to our images
+    private Integer[] mThumbIds;
+  //  private LayoutInflater inflater;
 
 
-    public ImageAdapter(Context c) {
-        this.mContext = c;
+    public ImageAdapter(Context c, Integer[] mThumbIds) {
+        this.context = c;
+        this.mThumbIds = mThumbIds;
+       // this.thumbNames = thumbNames;
     }
 
     public int getCount() {
@@ -30,10 +37,23 @@ public class ImageAdapter extends BaseAdapter{
 
     // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
+
+     /*   View gridView = convertView;
+        if(convertView == null) {
+            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            gridView = inflater.inflate(R.layout.activity_home,null);
+        }
+        ImageView images = (ImageView) gridView.findViewById(R.id.mThumbIds);
+        TextView names = (TextView) gridView.findViewById(R.id.thumbNames);
+
+        images.setImageResource(mThumbIds[position]);
+        names.setText(thumbNames[position]);
+
+        return gridView;*/
         ImageView imageView;
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
-            imageView = new ImageView(mContext);
+            imageView = new ImageView(context);
             imageView.setLayoutParams(new ViewGroup.LayoutParams(85, 85));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setPadding(8, 8, 8, 8);
@@ -45,18 +65,5 @@ public class ImageAdapter extends BaseAdapter{
         return imageView;
     }
 
-    // references to our images
-    private Integer[] mThumbIds = new Integer[]{
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7,
-            R.drawable.sample_0, R.drawable.sample_1,
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7,
-            R.drawable.sample_0, R.drawable.sample_1,
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7
-    };
+
 }
