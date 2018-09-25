@@ -1,5 +1,6 @@
 package com.example.linda.originalcharacterapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -43,6 +44,13 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         Button createButton = (Button) findViewById(R.id.create_character_button);
+        createButton.setOnClickListener(new View.OnClickListener () {
+            @Override
+            public void onClick(View view) {
+                createACharacter();
+            }
+        });
+
         TextView c = (TextView) findViewById(R.id.gallery_title);
         ImageButton settingsB = (ImageButton) findViewById(R.id.settingsButton);
         ImageButton searchB = (ImageButton) findViewById(R.id.searchButton);
@@ -60,6 +68,11 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void createACharacter() {
+        Intent intent = new Intent (HomeActivity.this, CreateCharacter.class);
+        startActivity (intent);
     }
 
 }
