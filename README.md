@@ -19,6 +19,9 @@ I will develop an app that is going to help other artists/author to keep informa
 
 <p align="center"> 
 <img src="https://imgur.com/4KbQ5kP.png">
+<img src="https://i.imgur.com/6KCQg33.png">
+<img src="https://i.imgur.com/bG6JWhv.png">
+<img src="https://i.imgur.com/qvsbyOJ.png">
 </p>
 --- Login page: Email, Password, Sign In Button, Register. ---
 
