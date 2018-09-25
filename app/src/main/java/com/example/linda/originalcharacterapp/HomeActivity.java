@@ -13,27 +13,24 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.view.View;
 
-
-
 //This is the homepage activity for user interactions with other things
 //This will have the logout button, change information, delete account with a warning screen
 //User will create their OC (character) which will lead to another activity page
 //If network is included, then I will add the search bar to search for other users in the database
+//Once the gridview image display the image, the user will click on the image to reveal the uploaded
+//character biography.
 
 public class HomeActivity extends AppCompatActivity {
-    // references to our images
+    // references to the temporary images.
     private Integer[] mThumbIds = new Integer[]{
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7,
-            R.drawable.sample_0, R.drawable.sample_1,
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7,
-            R.drawable.sample_0, R.drawable.sample_1,
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7
+            R.drawable.search, R.mipmap.ghostfinder101avatar,
+            R.mipmap.ghostfinderchibis, R.drawable.setting,
+            R.drawable.setting, R.drawable.setting,
+            R.drawable.setting, R.drawable.search,
+            R.drawable.logout, R.drawable.logout,
+            R.drawable.setting, R.drawable.logout,
+            R.drawable.logout, R.drawable.search,
+
     };
 
     private ImageView imageSelection;
@@ -59,7 +56,6 @@ public class HomeActivity extends AppCompatActivity {
       //  imageSelection = findViewById(R.id.selectImage);
         GridView gridview = (GridView) findViewById(R.id.user_grid_view);
         gridview.setAdapter(new ImageAdapter(this, mThumbIds));
-
         gridview.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
