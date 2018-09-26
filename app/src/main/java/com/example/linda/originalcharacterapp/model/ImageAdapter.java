@@ -1,4 +1,4 @@
-package com.example.linda.originalcharacterapp;
+package com.example.linda.originalcharacterapp.model;
 /*
 This is the image adapter for the gridview layout to display the user's gallery of characters in a grid
  */

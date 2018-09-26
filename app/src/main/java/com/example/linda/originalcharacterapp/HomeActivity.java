@@ -13,6 +13,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.view.View;
 
+import com.example.linda.originalcharacterapp.model.ImageAdapter;
+
 //This is the homepage activity for user interactions with other things
 //This will have the logout button, change information, delete account with a warning screen
 //User will create their OC (character) which will lead to another activity page
@@ -55,7 +57,7 @@ public class HomeActivity extends AppCompatActivity {
 
       //  imageSelection = findViewById(R.id.selectImage);
         GridView gridview = (GridView) findViewById(R.id.user_grid_view);
-        gridview.setAdapter(new ImageAdapter(this, mThumbIds));
+        gridview.setAdapter(new ImageAdapter (this, mThumbIds));
         gridview.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {

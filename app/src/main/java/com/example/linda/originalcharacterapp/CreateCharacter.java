@@ -12,12 +12,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.example.linda.originalcharacterapp.model.CharacterInformation;
+import com.example.linda.originalcharacterapp.model.UserInformation;
+
 
 public class CreateCharacter extends AppCompatActivity implements View.OnClickListener {
     private static int RESULT_LOAD_IMAGE = 1;
     Context context;
     EditText cName, cAge, cSpecies,cPersonality,cFamily,cBiography,cPowers;
     ImageView uploadImage;
+    CharacterInformation oc;
+    String nameValue, ageValue, speciesValue, familyValue, personalityValue, powerValue, bioValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,13 +31,28 @@ public class CreateCharacter extends AppCompatActivity implements View.OnClickLi
 
         Button buttonLoadImage = (Button) findViewById (R.id.submit_character_button);
         uploadImage = (ImageView) findViewById (R.id.uploadCharacter);
+
+
         cName = (EditText) findViewById (R.id.characterName);
+        nameValue = cName.getText().toString();
+
         cAge = (EditText) findViewById (R.id.characterAge);
+        ageValue = cAge.getText().toString();
+
         cSpecies = (EditText) findViewById (R.id.characterSpecies);
+        speciesValue = cSpecies.getText().toString();
+
         cPersonality = (EditText) findViewById (R.id.characterPersonality);
+        personalityValue = cPersonality.getText().toString();
+
         cFamily = (EditText) findViewById (R.id.characterFamily);
+        familyValue = cFamily.getText().toString();
+
         cBiography = (EditText) findViewById (R.id.characterBios);
+        bioValue = cBiography.getText().toString();
+
         cPowers = (EditText) findViewById (R.id.characterPowers);
+        powerValue = cPowers.getText().toString();
 
         uploadImage.setOnClickListener (this);
         buttonLoadImage.setOnClickListener (this);
@@ -63,5 +83,10 @@ public class CreateCharacter extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    public void createCharacter() {
+    CharacterInformation oc = new CharacterInformation(uploadImage.getResources (), nameValue, ageValue,speciesValue, personalityValue,familyValue, bioValue );
+    //Then the method will add the new character to the database
+
+    }
 
 }
