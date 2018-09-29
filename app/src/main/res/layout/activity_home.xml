@@ -83,12 +83,12 @@
                 app:srcCompat="@drawable/search" />
 
             <ImageButton
-                android:id="@+id/logoutButton"
+                android:id="@+id/faveButton"
                 android:layout_width="50dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/logout" />
+                app:srcCompat="@drawable/staricon" />
 
         </LinearLayout>
 

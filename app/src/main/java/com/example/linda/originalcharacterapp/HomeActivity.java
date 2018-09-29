@@ -52,8 +52,15 @@ public class HomeActivity extends AppCompatActivity {
 
         TextView c = (TextView) findViewById(R.id.gallery_title);
         ImageButton settingsB = (ImageButton) findViewById(R.id.settingsButton);
+        settingsB.setOnClickListener (new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                displaySettings();
+            }
+        });
+
         ImageButton searchB = (ImageButton) findViewById(R.id.searchButton);
-        ImageButton logoutB = (ImageButton) findViewById(R.id.logoutButton);
+        ImageButton faveButton = (ImageButton) findViewById(R.id.faveButton);
 
       //  imageSelection = findViewById(R.id.selectImage);
         GridView gridview = (GridView) findViewById(R.id.user_grid_view);
@@ -68,6 +75,10 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    private void displaySettings() {
+        Intent intent = new Intent (HomeActivity.this, SettingActivity.class);
+        startActivity (intent);
+    }
     private void createACharacter() {
         Intent intent = new Intent (HomeActivity.this, CreateCharacter.class);
         startActivity (intent);

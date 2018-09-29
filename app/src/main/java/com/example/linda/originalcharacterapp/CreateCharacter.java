@@ -32,7 +32,6 @@ public class CreateCharacter extends AppCompatActivity implements View.OnClickLi
         Button buttonLoadImage = (Button) findViewById (R.id.submit_character_button);
         uploadImage = (ImageView) findViewById (R.id.uploadCharacter);
 
-
         cName = (EditText) findViewById (R.id.characterName);
         nameValue = cName.getText().toString();
 
@@ -48,11 +47,11 @@ public class CreateCharacter extends AppCompatActivity implements View.OnClickLi
         cFamily = (EditText) findViewById (R.id.characterFamily);
         familyValue = cFamily.getText().toString();
 
-        cBiography = (EditText) findViewById (R.id.characterBios);
-        bioValue = cBiography.getText().toString();
-
         cPowers = (EditText) findViewById (R.id.characterPowers);
         powerValue = cPowers.getText().toString();
+
+        cBiography = (EditText) findViewById (R.id.characterBios);
+        bioValue = cBiography.getText().toString();
 
         uploadImage.setOnClickListener (this);
         buttonLoadImage.setOnClickListener (this);
@@ -85,7 +84,7 @@ public class CreateCharacter extends AppCompatActivity implements View.OnClickLi
 
     public void createCharacter() {
     CharacterInformation oc = new CharacterInformation(uploadImage.getResources (), nameValue, ageValue,speciesValue, personalityValue,familyValue, bioValue );
-    //Then the method will add the new character to the database
+    //Then the method will add/save the new character to the database
 
     }
 
