@@ -49,7 +49,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".SettingActivity" />
-        <activity android:name=".SearchActivity"></activity>
+        <activity android:name=".SearchActivity" />
+        <activity android:name=".OtherProfileActivity"></activity>
     </application>
 
 </manifest>
