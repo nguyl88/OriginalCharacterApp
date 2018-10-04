@@ -6,9 +6,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 public class SettingActivity extends AppCompatActivity {
-    Button saveButton, logoutButton;
+    Button saveButton, logoutButton,deleteAccountButton;
     EditText txtUsername, txtEmail,txtPassword;
-    //need database to change the user's data by email id
+    //need database to change the user's data by email id and delete account
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +16,7 @@ public class SettingActivity extends AppCompatActivity {
         setContentView (R.layout.setting_activity);
 
         saveButton = (Button)findViewById(R.id.save_setting);
+        deleteAccountButton = (Button) findViewById (R.id.deleteAccountbutton);
         logoutButton = (Button)findViewById(R.id.logoutbutton);
 
         txtUsername = (EditText)findViewById(R.id.txt_username);

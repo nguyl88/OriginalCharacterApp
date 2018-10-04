@@ -18,31 +18,43 @@ import java.util.regex.Pattern;
 public class Register extends AppCompatActivity  {
   //  SQLiteOpenHelper openHelper;
   //  SQLiteDatabase db;
-    Button createButton;
+
     EditText txtUsername, txtEmail,txtPassword;
     UserInformation newUser;
     String newUsername, newEmail, newPassword;
-    LinkedList<UserInformation> masterdata = new LinkedList<UserInformation>(); //temporarily will be use to put master data here
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        createButton = (Button)findViewById(R.id.create_account);
-        //Register button form
-        createButton.setOnClickListener(new View.OnClickListener () {
+        Button createButton = (Button)findViewById(R.id.create_account);
+
+      /*    createButton.setOnClickListener(new View.OnClickListener () {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 createAccount();
-            }
-        });
+
+        }); }*/
         txtUsername = (EditText)findViewById(R.id.txt_username);
+     //   newUsername = txtUsername.getText().toString();
 
         txtEmail = (EditText)findViewById(R.id.txt_email);
+    //    newEmail = txtEmail.getText().toString();
+
         txtPassword = (EditText)findViewById(R.id.txt_password);
+      //  newPassword = txtPassword.getText().toString();
 
         setContentView(R.layout.register_layout);
     }
+    private void createAccount() {
+        Intent intent = new Intent (Register.this, HomeActivity.class);
+        startActivity (intent);
+        //  newUser = new UserInformation(newUsername, newEmail, newPassword);
+
+        // Log.v("Create information", "User created for " + txtEmail.getText());
+
+    }
+/*
 
     private boolean isEmailValid(String email) {
         //replace with your logic
@@ -73,9 +85,11 @@ public class Register extends AppCompatActivity  {
         else if (!numberMatch.find()){
             System.out.println("Password must have at least one number");
 
-        /*    passwordAlert.setTitle("Digit");
+        */
+/*    passwordAlert.setTitle("Digit");
             passwordAlert.setContentText("Password must have at least have a number");
-            passwordAlert.showAndWait();*/
+            passwordAlert.showAndWait();*//*
+
             return false;
         }
         else if (!upperMatch.find()) {
@@ -87,14 +101,9 @@ public class Register extends AppCompatActivity  {
         }
         return true;
     }
+*/
 
-    private void createAccount() {
-        Intent intent = new Intent (Register.this, HomeActivity.class);
-        startActivity (intent);
-        newUser = new UserInformation(txtUsername, txtEmail, txtPassword);
-        Log.v("Create information", "User created" + txtEmail.getText());
 
-    }
 
 
 }

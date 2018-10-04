@@ -83,7 +83,7 @@ public class CreateCharacter extends AppCompatActivity implements View.OnClickLi
     }
 
     public void createCharacter() {
-    CharacterInformation oc = new CharacterInformation(uploadImage.getResources (), nameValue, ageValue,speciesValue, personalityValue,familyValue, bioValue );
+   // CharacterInformation oc = new CharacterInformation(uploadImage.getResources (), nameValue, ageValue,speciesValue, personalityValue,familyValue, bioValue );
     //Then the method will add/save the new character to the database
 
     }

@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 /*
 Database helper class
  */
-public class CharacterReaderHelper extends SQLiteOpenHelper {
+public class UserHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + CharacterContract.TABLE_NAME + " (" +
@@ -20,9 +20,9 @@ public class CharacterReaderHelper extends SQLiteOpenHelper {
             "DROP TABLE IF EXISTS " + CharacterContract.TABLE_NAME;
     // If you change the database schema, you must increment the database version.
     public static final int DATABASE_VERSION = 1;
-    public static final String USERDB_NAME = "character.db";
+    public static final String USERDB_NAME = "userdatabase.db";
 
-    public CharacterReaderHelper(Context context) {
+    public UserHelper(Context context) {
         super(context, USERDB_NAME, null, DATABASE_VERSION);
     }
     public void onCreate(SQLiteDatabase db) {

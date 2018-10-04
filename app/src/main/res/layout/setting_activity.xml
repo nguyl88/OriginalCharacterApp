@@ -63,6 +63,14 @@
         android:text="Save Settings" />
 
     <Button
+        android:id="@+id/deleteAccountbutton"
+        style="@android:style/Widget.DeviceDefault.Light.Button.Inset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Delete Account" />
+
+
+    <Button
         android:id="@+id/logoutbutton"
         style="@android:style/Widget.DeviceDefault.Light.Button.Inset"
         android:layout_width="match_parent"
