@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import com.example.linda.originalcharacterapp.model.CharacterInformation;
 import com.example.linda.originalcharacterapp.model.UserInformation;
 
+import java.io.FileInputStream;
+
 
 public class CreateCharacter extends AppCompatActivity implements View.OnClickListener {
     private static int RESULT_LOAD_IMAGE = 1;

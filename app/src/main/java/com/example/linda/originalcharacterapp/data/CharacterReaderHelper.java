@@ -11,19 +11,27 @@ public class CharacterReaderHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + CharacterContract.TABLE_NAME + " (" +
-                    CharacterContract.COLUMN_USERNAME + " INTEGER PRIMARY KEY," +
+                    CharacterContract._ID + "INTEGER PRIMARY KEY, "+
+                    CharacterContract.COLUMN_CHARACTERPOST + "INTEGER FOREIGN KEY," +
+                    CharacterContract.COLUMN_USERNAME + " TEXT," +
                     CharacterContract.COLUMN_NAME + " TEXT," +
-                    CharacterContract.COLUMN_AGE + " TEXT)"; //still have more to go
+                    CharacterContract.COLUMN_AGE + " TEXT," +
+                    CharacterContract.COLUMN_SPECIES + " TEXT," +
+                    CharacterContract.COLUMN_PERSONALITY + " TEXT" +
+                    CharacterContract.COLUMN_FAMILY + " TEXT," +
+                    CharacterContract.COLUMN_POWERS + " TEXT," +
+                    CharacterContract.COLUMN_BIOGRAPHY + " TEXT)"
+                    ;
 
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + CharacterContract.TABLE_NAME;
     // If you change the database schema, you must increment the database version.
     public static final int DATABASE_VERSION = 1;
-    public static final String USERDB_NAME = "character.db";
+    public static final String CHARACTERDB_NAME = "character.db";
 
     public CharacterReaderHelper(Context context) {
-        super(context, USERDB_NAME, null, DATABASE_VERSION);
+        super(context, CHARACTERDB_NAME, null, DATABASE_VERSION);
     }
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_ENTRIES);

@@ -11,7 +11,7 @@ public class UserHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + CharacterContract.TABLE_NAME + " (" +
-                    CharacterContract.COLUMN_USERNAME + " INTEGER PRIMARY KEY," +
+                    CharacterContract.COLUMN_USERNAME + " TEXT," +
                     CharacterContract.COLUMN_NAME + " TEXT," +
                     CharacterContract.COLUMN_AGE + " TEXT)"; //still have more to go
 
