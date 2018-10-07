@@ -26,6 +26,7 @@ public class CreateCharacter extends AppCompatActivity implements View.OnClickLi
     CharacterInformation oc;
     String nameValue, ageValue, speciesValue, familyValue, personalityValue, powerValue, bioValue;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
@@ -56,7 +57,14 @@ public class CreateCharacter extends AppCompatActivity implements View.OnClickLi
         bioValue = cBiography.getText().toString();
 
         uploadImage.setOnClickListener (this);
-        buttonLoadImage.setOnClickListener (this);
+       // buttonLoadImage.setOnClickListener (this);
+
+        buttonLoadImage.setOnClickListener(new View.OnClickListener () {
+            @Override
+            public void onClick(View view) {
+               createCharacter();
+            }
+        });
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

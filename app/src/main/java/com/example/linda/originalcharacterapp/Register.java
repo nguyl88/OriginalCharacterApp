@@ -7,7 +7,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.example.linda.originalcharacterapp.data.UserHelper;
 import com.example.linda.originalcharacterapp.model.UserInformation;
 
 import java.util.LinkedList;
@@ -22,88 +24,96 @@ public class Register extends AppCompatActivity  {
     EditText txtUsername, txtEmail,txtPassword;
     UserInformation newUser;
     String newUsername, newEmail, newPassword;
+    UserHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.register_layout);
+        txtUsername = (EditText)findViewById(R.id.txt_username);
+        txtEmail = (EditText)findViewById(R.id.txt_email);
+        txtPassword = (EditText)findViewById(R.id.txt_password);
+        databaseHelper = new UserHelper(this);
 
         Button createButton = (Button)findViewById(R.id.create_account);
 
-      /*    createButton.setOnClickListener(new View.OnClickListener () {
+        createButton.setOnClickListener(new View.OnClickListener () {
+
             @Override
             public void onClick(View view) {
-                createAccount();
+                UserInformation newUser = new UserInformation(newUsername, newEmail, newPassword);
 
-        }); }*/
-        txtUsername = (EditText)findViewById(R.id.txt_username);
-     //   newUsername = txtUsername.getText().toString();
+                newUsername = txtUsername.getText().toString();
+                newEmail = txtEmail.getText().toString();
+                newPassword = txtPassword.getText().toString();
 
-        txtEmail = (EditText)findViewById(R.id.txt_email);
-    //    newEmail = txtEmail.getText().toString();
+                if(isEmailValid() && isPasswordValid() && notEmpty()) {
+                    createUserData(newUser);
+                } else {
+                    toastMessage("You need to put something in the textfield");
+                }
+            }
 
-        txtPassword = (EditText)findViewById(R.id.txt_password);
-      //  newPassword = txtPassword.getText().toString();
+        });
 
-        setContentView(R.layout.register_layout);
+        createButton.setOnClickListener(new View.OnClickListener () {
+
+            @Override
+            public void onClick(View view) {
+                openAccount();
+            }
+
+        });
     }
-    private void createAccount() {
+    private void openAccount() {
         Intent intent = new Intent (Register.this, HomeActivity.class);
         startActivity (intent);
-        //  newUser = new UserInformation(newUsername, newEmail, newPassword);
-
-        // Log.v("Create information", "User created for " + txtEmail.getText());
-
     }
-/*
+    private boolean notEmpty() {
+        if (txtEmail.length() != 0 && txtPassword.length() != 0 && txtUsername.length() != 0)
+        return true;
+        else return false;
+    }
 
-    private boolean isEmailValid(String email) {
+    public void createUserData(UserInformation newUser) {
+        boolean insertData = databaseHelper.insertUserData(newUser);
+
+        if (insertData) {
+            toastMessage ("New user successfully inserted");
+        } else toastMessage ("New user did not insert. ");
+    }
+    private void toastMessage(String message) {
+        Toast.makeText(this,message, Toast.LENGTH_SHORT).show();
+    }
+
+
+    private boolean isEmailValid() {
         //replace with your logic
-        if (!email.contains("@")) {
+        if (!newEmail.contains("@")) {
             System.out.println("Account does not exist");
-            createAccount ();  //opens the user's profile
+            openAccount ();  //opens the user's profile
         }
         System.out.println("Valid email");
-        return email.contains("@");
+        return newEmail.contains("@");
 
     }
 
-    private boolean isPasswordValid(String password) {
+    private boolean isPasswordValid() {
 
         Pattern pattern = Pattern.compile("[0-9]");
         Pattern pattern2 = Pattern.compile("[A-Z]");
 
-        Matcher numberMatch = pattern.matcher(password);
-        Matcher upperMatch = pattern2.matcher(password);
+        Matcher numberMatch = pattern.matcher(newPassword);
+        Matcher upperMatch = pattern2.matcher(newPassword);
 
-        if (password.length() < 8) {
+        if (newPassword.length() < 8) {
             System.out.println("Must have at least 8 characters long");
-//            passwordAlert.setTitle("Must have at least 8 characters long");
-//            passwordAlert.setContentText("Password must be 8 characters long");
-//            passwordAlert.showAndWait();
             return false;
         }
-        else if (!numberMatch.find()){
-            System.out.println("Password must have at least one number");
-
-        */
-/*    passwordAlert.setTitle("Digit");
-            passwordAlert.setContentText("Password must have at least have a number");
-            passwordAlert.showAndWait();*//*
-
-            return false;
-        }
-        else if (!upperMatch.find()) {
-//            passwordAlert.setTitle("Uppercase");
-//            passwordAlert.setContentText("Password must have at least have an uppercase");
-//            passwordAlert.showAndWait();
-            System.out.println("Password must have at least one uppercase");
-            return false;
+        else if (!numberMatch.find()) {
+            System.out.println ("Password must have at least one number");
         }
         return true;
     }
-*/
-
-
-
 
 }
