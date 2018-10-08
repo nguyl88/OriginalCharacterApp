@@ -3,6 +3,9 @@ package com.example.linda.originalcharacterapp;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -14,6 +17,7 @@ import android.widget.ImageView;
 import android.view.View;
 
 import com.example.linda.originalcharacterapp.model.ImageAdapter;
+import com.example.linda.originalcharacterapp.model.RecycleViewAdapter;
 
 //This is the homepage activity for user interactions with other things
 //This will have the logout button, change information, delete account with a warning screen
@@ -24,7 +28,7 @@ import com.example.linda.originalcharacterapp.model.ImageAdapter;
 
 public class HomeActivity extends AppCompatActivity {
     // references to the temporary images.
-    private Integer[] mThumbIds = new Integer[]{
+    private Integer[] testImages = new Integer[]{
             R.drawable.search, R.mipmap.ghostfinder101avatar,
             R.mipmap.ghostfinderchibis, R.drawable.setting,
             R.drawable.setting, R.drawable.setting,
@@ -34,6 +38,10 @@ public class HomeActivity extends AppCompatActivity {
             R.drawable.logout, R.drawable.search,
 
     };
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     private ImageView imageSelection;
 
@@ -63,15 +71,27 @@ public class HomeActivity extends AppCompatActivity {
         ImageButton faveButton = (ImageButton) findViewById(R.id.faveButton);
 
       //  imageSelection = findViewById(R.id.selectImage);
-        GridView gridview = (GridView) findViewById(R.id.user_grid_view);
-        gridview.setAdapter(new ImageAdapter (this, mThumbIds));
-        gridview.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                Toast.makeText(HomeActivity.this, "" + position,
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+//        GridView gridview = (GridView) findViewById(R.id.user_grid_view);
+//        gridview.setAdapter(new ImageAdapter (this, testImages));
+//        gridview.setOnItemClickListener(new OnItemClickListener() {
+//            public void onItemClick(AdapterView<?> parent, View v,
+//                                    int position, long id) {
+//                Toast.makeText(HomeActivity.this, "" + position,
+//                        Toast.LENGTH_SHORT).show();
+//            }
+//        });
+        mRecyclerView = (RecyclerView) findViewById(R.id.imagegallery);
+        // use this setting to improve performance if you know that changes in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager (this);
+       // mRecyclerView.setLayoutManager (mLayoutManager);
+        mRecyclerView.setLayoutManager(new GridLayoutManager (this,2));
+
+        // specify an adapter (see also next example)
+        mAdapter = new RecycleViewAdapter (testImages);
+        mRecyclerView.setAdapter(mAdapter);
 
     }
 
