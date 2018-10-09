@@ -66,7 +66,7 @@ public class Register extends AppCompatActivity  {
         });
     }
     private void openAccount() {
-        Intent intent = new Intent (Register.this, HomeActivity.class);
+        Intent intent = new Intent (Register.this, MainUserActivity.class);
         startActivity (intent);
     }
     private boolean notEmpty() {

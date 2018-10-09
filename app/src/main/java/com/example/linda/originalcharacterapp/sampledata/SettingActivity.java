@@ -1,4 +1,4 @@
-package com.example.linda.originalcharacterapp;
+package com.example.linda.originalcharacterapp.sampledata;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+
+import com.example.linda.originalcharacterapp.R;
 
 public class SettingActivity extends AppCompatActivity {
     Button saveButton, logoutButton,deleteAccountButton;

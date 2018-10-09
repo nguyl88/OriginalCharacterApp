@@ -13,6 +13,7 @@
         android:title="@string/title_dashboard" />
     <item
         android:id="@+id/create_character"
+        android:icon="@drawable/ic_create_black_24dp"
         android:title="@string/title_createocs" />
     <item
         android:id="@+id/navigation_likes"
@@ -23,8 +24,5 @@
         android:id="@+id/setting_activity"
         android:icon="@drawable/ic_perm_data_setting_black_24dp"
         android:title="@string/title_settings" />
-
-
-
 
 </menu>
