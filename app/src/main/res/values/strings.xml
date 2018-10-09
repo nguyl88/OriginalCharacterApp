@@ -17,4 +17,13 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <string name="title_activity_main_user">MainUserActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_likes">Likes</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_createocs"> + Create Character</string>
+    <string name="title_Your_OCs">Your OCs</string>
 </resources>

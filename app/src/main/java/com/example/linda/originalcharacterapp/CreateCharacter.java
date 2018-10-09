@@ -2,15 +2,20 @@ package com.example.linda.originalcharacterapp;
 
 import android.content.Context;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
 import android.net.Uri;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.example.linda.originalcharacterapp.model.CharacterInformation;
 import com.example.linda.originalcharacterapp.model.UserInformation;
@@ -25,7 +30,6 @@ public class CreateCharacter extends AppCompatActivity implements View.OnClickLi
     ImageView uploadImage;
     CharacterInformation oc;
     String nameValue, ageValue, speciesValue, familyValue, personalityValue, powerValue, bioValue;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +62,13 @@ public class CreateCharacter extends AppCompatActivity implements View.OnClickLi
 
         uploadImage.setOnClickListener (this);
        // buttonLoadImage.setOnClickListener (this);
-
         buttonLoadImage.setOnClickListener(new View.OnClickListener () {
             @Override
             public void onClick(View view) {
                createCharacter();
             }
         });
+
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

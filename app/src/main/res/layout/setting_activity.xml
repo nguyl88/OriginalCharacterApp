@@ -27,9 +27,13 @@
         android:textStyle="bold"
         app:fontFamily="cursive" />
 
-
-    <!-- Registration progress -->
-
+    <FrameLayout
+        android:id= "@+id/fragment_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_above="@+id/navigation"
+        android:orientation="vertical"
+        />
 
     <EditText
         android:id="@+id/txt_username"

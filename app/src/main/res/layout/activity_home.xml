@@ -11,6 +11,8 @@
     android:fitsSystemWindows="true"
     android:baselineAligned="false"
     tools:context=".HomeActivity">
+
+
     <ScrollView
         android:id="@+id/scrollview"
         android:layout_width="wrap_content"
@@ -25,30 +27,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/imagegallery"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/create_character_button"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:scaleType="centerCrop"
-                android:text="Create OC + " />
-
-            <TextView
-                android:id="@+id/gallery_title"
-                android:layout_width="wrap_content"
-                android:layout_height="64dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Characters"
-                android:textSize="30sp"
-                android:textStyle="bold"
-                app:fontFamily="cursive" />
-        </LinearLayout>
-
+            android:layout_height="match_parent"
+            />
         <GridView
             android:id="@+id/user_grid_view"
             android:layout_weight="1"
@@ -62,44 +45,6 @@
             android:verticalSpacing="10dp">
 
         </GridView>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/imagegallery"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:gravity="bottom"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/settingsButton"
-                android:layout_width="50dip"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/setting" />
-
-            <ImageButton
-                android:id="@+id/searchButton"
-                android:layout_width="50dip"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/search" />
-
-            <ImageButton
-                android:id="@+id/faveButton"
-                android:layout_width="50dip"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/staricon" />
-
-        </LinearLayout>
 
     </LinearLayout>
     </ScrollView>

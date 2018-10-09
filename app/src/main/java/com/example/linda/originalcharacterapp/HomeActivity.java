@@ -1,11 +1,16 @@
 package com.example.linda.originalcharacterapp;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.widget.GridView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -39,36 +44,18 @@ public class HomeActivity extends AppCompatActivity {
 
     };
 
+
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     private ImageView imageSelection;
+    BottomNavigationView navView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        Button createButton = (Button) findViewById(R.id.create_character_button);
-        createButton.setOnClickListener(new View.OnClickListener () {
-            @Override
-            public void onClick(View view) {
-                createACharacter();
-            }
-        });
-
-        TextView c = (TextView) findViewById(R.id.gallery_title);
-        ImageButton settingsB = (ImageButton) findViewById(R.id.settingsButton);
-        settingsB.setOnClickListener (new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                displaySettings();
-            }
-        });
-
-        ImageButton searchB = (ImageButton) findViewById(R.id.searchButton);
-        ImageButton faveButton = (ImageButton) findViewById(R.id.faveButton);
 
       //  imageSelection = findViewById(R.id.selectImage);
 //        GridView gridview = (GridView) findViewById(R.id.user_grid_view);
@@ -93,15 +80,8 @@ public class HomeActivity extends AppCompatActivity {
         mAdapter = new RecycleViewAdapter (testImages);
         mRecyclerView.setAdapter(mAdapter);
 
+
     }
 
-    private void displaySettings() {
-        Intent intent = new Intent (HomeActivity.this, SettingActivity.class);
-        startActivity (intent);
-    }
-    private void createACharacter() {
-        Intent intent = new Intent (HomeActivity.this, CreateCharacter.class);
-        startActivity (intent);
-    }
 
 }
