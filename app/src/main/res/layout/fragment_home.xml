@@ -10,7 +10,7 @@
     android:background= "@mipmap/bluescreen"
     android:fitsSystemWindows="true"
     android:baselineAligned="false"
-    tools:context=".HomeActivity">
+    >
 
     <ScrollView
         android:id="@+id/scrollview"

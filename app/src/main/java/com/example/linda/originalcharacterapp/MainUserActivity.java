@@ -6,6 +6,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainUserActivity extends AppCompatActivity{
@@ -26,9 +27,15 @@ public class MainUserActivity extends AppCompatActivity{
 
                 case R.id.navigation_dashboard:
                     val = true;
+                    loadFragment(fragment);
                     break;
                 case R.id.create_character:
                     fragment = new CreateOCFragment ();
+                    loadFragment(fragment);
+                    val = true;
+                    break;
+                case R.id.navigation_likes:
+                    fragment = new LikesFragment ();
                     loadFragment(fragment);
                     val = true;
                     break;
@@ -61,4 +68,13 @@ public class MainUserActivity extends AppCompatActivity{
             transaction.addToBackStack (null);
             transaction.commit ();
         }
-        }
+
+        @Override
+         public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        // getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+         }
+
+
+}
