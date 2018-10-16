@@ -1,5 +1,6 @@
 package com.example.linda.originalcharacterapp;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -9,7 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainUserActivity extends AppCompatActivity{
+public class MainUserActivity extends AppCompatActivity implements DisplayCharacter.OnFragmentInteractionListener {
     private Fragment fragment;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -75,6 +76,11 @@ public class MainUserActivity extends AppCompatActivity{
         // getMenuInflater().inflate(R.menu.main, menu);
         return true;
          }
+    @Override
+    public void onFragmentInteraction(Uri uri){
+
+    }
+
 
 
 }

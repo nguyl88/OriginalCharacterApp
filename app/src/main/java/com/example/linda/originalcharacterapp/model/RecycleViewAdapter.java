@@ -2,23 +2,24 @@ package com.example.linda.originalcharacterapp.model;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.linda.originalcharacterapp.CharacterView;
+import com.example.linda.originalcharacterapp.DisplayCharacter;
 import com.example.linda.originalcharacterapp.R;
 
 import java.util.ArrayList;
 
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder> {
         private Integer[] mDataset;
+    //    private ArrayList<Integer> mDataset;
         private Context context;
-     //   private ArrayList<CharacterInformation>;
+     //  private ArrayList<CharacterInformation>;
 
         // Provide a reference to the views for each data item
         // Complex data items may need more than one view per item, and
@@ -44,7 +45,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                                                          int viewType) {
             // create a new view
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_row, parent, false);
-
             MyViewHolder vh = new MyViewHolder(view);
             return vh;
         }
@@ -58,14 +58,18 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             holder.image.setImageResource (mDataset[position]);
 
             holder.image.setOnClickListener (new View.OnClickListener () {
+
+
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, CharacterView.class);;
-                    context.startActivity(intent);
+                    AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                    DisplayCharacter ocFragment = new DisplayCharacter();
+                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, ocFragment).addToBackStack(null).commit();
                 }
             });
 
         }
+
         // Return the size of your dataset (invoked by the layout manager)
         @Override
         public int getItemCount() {

@@ -1,5 +1,6 @@
 package com.example.linda.originalcharacterapp;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,7 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.linda.originalcharacterapp.model.CharacterInformation;
 import com.example.linda.originalcharacterapp.model.RecycleViewAdapter;
+
+import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
     // references to the temporary images.
@@ -62,4 +66,19 @@ public class HomeFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
 
 }
+
+
+    private ArrayList<CharacterInformation> prepareData() {
+        ArrayList<CharacterInformation> theimage = new ArrayList<>();
+        for(int i = 0; i < testImages.length; i++){
+            CharacterInformation createList = new CharacterInformation ();
+            createList.setCharacterImage (testImages[i]);
+            theimage.add(createList);
+        }
+        return theimage;
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction(Uri uri);
+    }
 }

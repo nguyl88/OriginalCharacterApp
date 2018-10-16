@@ -18,7 +18,7 @@
         completions."
     </string>
 
-    <string name="title_activity_main_user">MainUserActivity</string>
+    <string name="title_activity_main_user"> OC Central</string>
     <string name="title_home">Home</string>
     <string name="title_search">Search OCs</string>
     <string name="title_notifications">Notifications</string>

@@ -3,7 +3,8 @@ package com.example.linda.originalcharacterapp.model;
 import android.content.res.Resources;
 import android.widget.ImageView;
 
-public class CharacterInformation {
+public class
+CharacterInformation {
     private int postId;
     private String characterName;
     private String characterAge;
@@ -13,10 +14,12 @@ public class CharacterInformation {
     private String characterBio;
     private String characterFamily;
 
-    private Resources characterImage;
+    private Integer characterImage;
 
+    public CharacterInformation() {
 
-    public CharacterInformation(Resources characterImage, String characterName, String characterAge,
+    }
+    public CharacterInformation(Integer characterImage, String characterName, String characterAge,
                                 String characterSpecies, String characterPersonality, String characterFamily,
                                 String characterBio) {
         this.characterName = characterName;
@@ -29,7 +32,7 @@ public class CharacterInformation {
         this.characterImage = characterImage;
     }
 
-    public CharacterInformation(int postId, Resources characterImage, String characterName, String characterAge,
+    public CharacterInformation(int postId, Integer characterImage, String characterName, String characterAge,
                                 String characterSpecies, String characterPersonality, String characterFamily,
                                 String characterBio) {
         this.postId = postId;
@@ -107,11 +110,11 @@ public class CharacterInformation {
         this.characterBio = characterBio;
     }
 
-    public Resources getCharacterImage() {
+    public Integer getCharacterImage() {
         return characterImage;
     }
 
-    public void setCharacterImage(Resources characterImage) {
+    public void setCharacterImage(Integer characterImage) {
         this.characterImage = characterImage;
     }
 
