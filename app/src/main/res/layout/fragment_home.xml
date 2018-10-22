@@ -12,6 +12,7 @@
     android:baselineAligned="false"
     >
 
+
     <ScrollView
         android:id="@+id/scrollview"
         android:layout_width="wrap_content"
@@ -25,6 +26,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <TextView
+            android:id="@+id/signed_in_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Verified"
+            />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/imagegallery"

@@ -15,11 +15,11 @@ import android.widget.ImageView;
 
 import com.example.linda.originalcharacterapp.model.CharacterInformation;
 import com.example.linda.originalcharacterapp.model.RecycleViewAdapter;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
-    // references to the temporary images.
     private Integer[] testImages = new Integer[]{
             R.drawable.search, R.mipmap.ghostfinder101avatar,
             R.mipmap.ghostfinderchibis, R.drawable.setting,
@@ -34,6 +34,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private FirebaseAuth firebaseAuth;
 
     private ImageView imageSelection;
 
@@ -67,7 +68,6 @@ public class HomeFragment extends Fragment {
 
 }
 
-
     private ArrayList<CharacterInformation> prepareData() {
         ArrayList<CharacterInformation> theimage = new ArrayList<>();
         for(int i = 0; i < testImages.length; i++){
@@ -81,4 +81,5 @@ public class HomeFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
+
 }
