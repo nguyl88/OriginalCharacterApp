@@ -13,11 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.example.linda.originalcharacterapp.model.CharacterInformation;
-import com.example.linda.originalcharacterapp.model.RecycleViewAdapter;
+import com.example.linda.originalcharacterapp.utils.RecycleViewAdapter;
 import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
     private Integer[] testImages = new Integer[]{
@@ -68,7 +65,7 @@ public class HomeFragment extends Fragment {
 
 }
 
-    private ArrayList<CharacterInformation> prepareData() {
+    /*private ArrayList<CharacterInformation> prepareData() {
         ArrayList<CharacterInformation> theimage = new ArrayList<>();
         for(int i = 0; i < testImages.length; i++){
             CharacterInformation createList = new CharacterInformation ();
@@ -76,7 +73,7 @@ public class HomeFragment extends Fragment {
             theimage.add(createList);
         }
         return theimage;
-    }
+    }*/
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);

@@ -61,6 +61,12 @@
         android:layout_height="wrap_content"
         android:text="Create Account" />
 
+    <Button
+        android:id="@+id/tologin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Go Back" />
+
     <TextView
         android:id="@+id/existing_account"
         android:layout_width="match_parent"

@@ -1,8 +1,6 @@
-package com.example.linda.originalcharacterapp.model;
+package com.example.linda.originalcharacterapp.utils;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,8 +10,6 @@ import android.widget.ImageView;
 
 import com.example.linda.originalcharacterapp.DisplayCharacter;
 import com.example.linda.originalcharacterapp.R;
-
-import java.util.ArrayList;
 
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder> {
         private Integer[] mDataset;

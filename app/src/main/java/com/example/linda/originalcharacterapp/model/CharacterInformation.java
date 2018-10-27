@@ -1,11 +1,13 @@
 package com.example.linda.originalcharacterapp.model;
 
-import android.content.res.Resources;
-import android.widget.ImageView;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class
-CharacterInformation {
-    private int postId;
+import java.util.List;
+
+public class CharacterInformation implements Parcelable {
+    private String user_id;
+    private String photo_id;
     private String characterName;
     private String characterAge;
     private String characterSpecies;
@@ -13,14 +15,15 @@ CharacterInformation {
     private String characterPowers;
     private String characterBio;
     private String characterFamily;
+    private List<Likes> likes;
 
-    private Integer characterImage;
+    private String characterImage;
 
-    public CharacterInformation() {
+    public CharacterInformation()  {
 
     }
-    public CharacterInformation(Integer characterImage, String characterName, String characterAge,
-                                String characterSpecies, String characterPersonality, String characterFamily,
+    public CharacterInformation(String characterImage, String characterName, String characterAge,
+                                String characterSpecies,String characterPowers, String characterPersonality, String characterFamily,
                                 String characterBio) {
         this.characterName = characterName;
         this.characterAge = characterAge;
@@ -32,10 +35,11 @@ CharacterInformation {
         this.characterImage = characterImage;
     }
 
-    public CharacterInformation(int postId, Integer characterImage, String characterName, String characterAge,
-                                String characterSpecies, String characterPersonality, String characterFamily,
+    public CharacterInformation(String user_id,String photo_id,String characterImage, String characterName, String characterAge,
+                                String characterPowers,String characterSpecies, String characterPersonality, String characterFamily,
                                 String characterBio) {
-        this.postId = postId;
+        this.user_id = user_id;
+        this.photo_id = photo_id;
 
         this.characterName = characterName;
         this.characterAge = characterAge;
@@ -47,13 +51,30 @@ CharacterInformation {
         this.characterImage = characterImage;
     }
 
-    public int getPostId() {
-        return postId;
+    public String getUser_id() {
+        return user_id;
     }
 
-    public void setPostId(int postId) {
-        this.postId = postId;
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
+
+    public String getPhoto_id() {
+        return photo_id;
+    }
+
+    public void setPhoto_id(String photo_id) {
+        this.photo_id = photo_id;
+    }
+
+    public List<Likes> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<Likes> likes) {
+        this.likes = likes;
+    }
+
     public String getCharacterName() {
         return characterName;
     }
@@ -110,12 +131,72 @@ CharacterInformation {
         this.characterBio = characterBio;
     }
 
-    public Integer getCharacterImage() {
+    public String getCharacterImage() {
         return characterImage;
     }
 
-    public void setCharacterImage(Integer characterImage) {
+    public void setCharacterImage(String characterImage) {
         this.characterImage = characterImage;
     }
+    protected CharacterInformation(Parcel in) {
+        user_id = in.readString();
+        photo_id= in.readString();
+        characterImage= in.readString();
+        characterName = in.readString();
+        characterAge = in.readString();
+        characterSpecies = in.readString();
+        characterPersonality= in.readString();
+        characterPowers= in.readString();
+        characterBio = in.readString();
+    }
+    public static final Creator<CharacterInformation> CREATOR = new Creator<CharacterInformation>() {
+        @Override
+        public CharacterInformation createFromParcel(Parcel in) {
+            return new CharacterInformation(in);
+        }
 
+        @Override
+        public CharacterInformation[] newArray(int size) {
+            return new CharacterInformation[size];
+        }
+    };
+    public static Creator<CharacterInformation> getCREATOR() {
+        return CREATOR;
+    }
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(user_id);
+        dest.writeString(photo_id);
+        dest.writeString(characterImage);
+        dest.writeString(characterName);
+        dest.writeString(characterAge);
+        dest.writeString(characterSpecies);
+        dest.writeString(characterPersonality);
+        dest.writeString(characterFamily);
+        dest.writeString(characterPowers);
+        dest.writeString(characterBio);
+
+    }
+
+    @Override
+    public String toString() {
+        return "CharacterInformation{" +
+                "user_id='" + user_id + '\'' +
+                ", photo_id='" + photo_id + '\'' +
+                ", characterName='" + characterName + '\'' +
+                ", characterAge='" + characterAge + '\'' +
+                ", characterSpecies='" + characterSpecies + '\'' +
+                ", characterPersonality='" + characterPersonality + '\'' +
+                ", characterPowers='" + characterPowers + '\'' +
+                ", characterBio='" + characterBio + '\'' +
+                ", characterFamily='" + characterFamily + '\'' +
+                ", likes=" + likes +
+                ", characterImage='" + characterImage + '\'' +
+                '}';
+    }
 }

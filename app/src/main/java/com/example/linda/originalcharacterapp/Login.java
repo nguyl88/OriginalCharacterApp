@@ -56,6 +56,7 @@ public class Login extends AppCompatActivity implements  View.OnClickListener {
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
+        firebaseAuth = FirebaseAuth.getInstance();
     }
     @Override
     public void onClick(View view) {
@@ -150,7 +151,6 @@ public class Login extends AppCompatActivity implements  View.OnClickListener {
             finish();
             startActivity(new Intent(this, MainUserActivity.class));
     }
-
 
     }
 }

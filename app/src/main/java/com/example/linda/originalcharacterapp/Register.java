@@ -20,6 +20,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 //This will open the register format for the user to enter the information
 public class Register extends AppCompatActivity implements View.OnClickListener{
@@ -32,8 +34,13 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
     private  UserHelper databaseHelper;
     private static final String TAG  = "Register";
     private TextView existAccount;
+
+    //Firebase
     private ProgressBar progressBar;
     private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference myRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +54,12 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
         progressBar = findViewById(R.id.progress_register);
 
         Button createButton = (Button)findViewById(R.id.create_account);
+        Button goBackButton = (Button)findViewById(R.id.tologin);
         createButton.setOnClickListener(this);
+        String newEmail = txtEmail.getText().toString().trim();
+        String newPassword = txtPassword.getText().toString().trim();
+        String newUsername = txtUsername.getText().toString().trim();
+
 
         // Initialize Firebase Auth
         firebaseAuth = FirebaseAuth.getInstance();
@@ -56,22 +68,27 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+
             case R.id.create_account:
-                registerUser();
+                String newEmail = txtEmail.getText().toString().trim();
+                String newPassword = txtPassword.getText().toString().trim();
+                String newUsername = txtUsername.getText().toString().trim();
+                registerUser(newEmail, newPassword, newUsername);
                 break;
 
             case R.id.existing_account:
                 finish();
                 startActivity(new Intent(this, Login.class));
                 break;
+
+            case R.id.tologin:
+                goBack ();
+                break;
         }
     }
 
-    private void registerUser() {
+    private void registerUser(final String newEmail, final String newPassword, final String newUsername) {
 
-        String newEmail = txtEmail.getText().toString().trim();
-        String newPassword = txtPassword.getText().toString().trim();
-        String newUsername = txtUsername.getText().toString().trim();
         if (TextUtils.isEmpty(newEmail)) {
         Toast.makeText (this, "Please enter email", Toast.LENGTH_SHORT).show();
         return;
@@ -120,9 +137,6 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
             }
         });
 
-
-
-
     }
 
     private void openAccount() {
@@ -135,6 +149,11 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
         else return false;
     }
 
+    private void goBack() {
+        Intent intent = new Intent (Register.this, Login.class);
+        startActivity (intent);
+    }
+
     public void createUserData(UserInformation newUser) {
         boolean insertData = databaseHelper.insertUserData(newUser);
 
@@ -145,8 +164,18 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
     private void toastMessage(String message) {
         Toast.makeText(this,message, Toast.LENGTH_SHORT).show();
     }
+    @Override
+    public void onStart() {
+        super.onStart();
+        firebaseAuth.addAuthStateListener(mAuthListener);
+    }
 
-
-
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            firebaseAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
 
 }

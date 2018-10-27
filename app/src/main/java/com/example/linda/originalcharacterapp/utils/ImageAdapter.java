@@ -1,14 +1,12 @@
-package com.example.linda.originalcharacterapp.model;
+package com.example.linda.originalcharacterapp.utils;
 /*
 This is the image adapter for the gridview layout to display the user's gallery of characters in a grid
  */
-import android.view.LayoutInflater;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
 
 
 public class ImageAdapter extends BaseAdapter{

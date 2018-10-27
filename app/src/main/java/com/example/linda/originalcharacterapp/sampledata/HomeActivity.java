@@ -1,29 +1,15 @@
 package com.example.linda.originalcharacterapp.sampledata;
 
-import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.MenuItem;
-import android.widget.LinearLayout;
-import android.widget.Toast;
-import android.widget.GridView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.view.View;
 
 import com.example.linda.originalcharacterapp.R;
-import com.example.linda.originalcharacterapp.model.ImageAdapter;
-import com.example.linda.originalcharacterapp.model.RecycleViewAdapter;
+import com.example.linda.originalcharacterapp.utils.RecycleViewAdapter;
 
 //This is the homepage activity for user interactions with other things
 //This will have the logout button, change information, delete account with a warning screen

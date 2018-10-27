@@ -1,20 +1,13 @@
 package com.example.linda.originalcharacterapp.model;
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-import com.example.linda.originalcharacterapp.R;
-
-public class UserInformation {
+public class UserInformation implements Parcelable {
     private String username;
     private String email;
     private String password;
-    private int id;
+    private String user_id;
 
 
     public UserInformation(String username, String email, String password) {
@@ -23,8 +16,8 @@ public class UserInformation {
         this.password = password;
     }
 
-    public UserInformation(int id, String username, String email, String password) {
-        this.id = id;
+    public UserInformation(String user_id, String username, String email, String password) {
+        this.user_id = user_id;
         this.username = username;
         this.email = email;
         this.password = password;
@@ -37,12 +30,12 @@ public class UserInformation {
         this.username = username;
     }
 
-    public int getId() {
-        return id;
+    public String getUser_id() {
+        return user_id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 
     public String getEmail() {
@@ -61,4 +54,40 @@ public class UserInformation {
         this.password = password;
     }
 
+    public static final Creator<UserInformation> CREATOR = new Creator<UserInformation>() {
+        @Override
+        public UserInformation createFromParcel(Parcel in) {
+            return new UserInformation(in);
+        }
+
+        @Override
+        public UserInformation[] newArray(int size) {
+            return new UserInformation[size];
+        }
+    };
+    public static Creator<UserInformation> getCREATOR() {
+        return CREATOR;
+    }
+    protected UserInformation (Parcel in) {
+        user_id = in.readString();
+        password = in.readString();
+        email = in.readString();
+        username = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(user_id);
+        dest.writeString(email);
+        dest.writeString(password);
+        dest.writeString(username);
+
+
+
+    }
 }

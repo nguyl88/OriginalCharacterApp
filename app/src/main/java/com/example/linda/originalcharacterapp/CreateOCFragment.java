@@ -3,7 +3,6 @@ package com.example.linda.originalcharacterapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,18 +17,22 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.example.linda.originalcharacterapp.model.CharacterInformation;
-
-import java.io.IOException;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import static android.app.Activity.RESULT_OK;
 
 public class CreateOCFragment extends Fragment  implements View.OnClickListener{
     private static int RESULT_LOAD_IMAGE = 1;
-    Context context;
-    EditText cName, cAge, cSpecies,cPersonality,cFamily,cBiography,cPowers;
-    ImageView uploadImage;
-    CharacterInformation oc;
-    String nameValue, ageValue, speciesValue, familyValue, personalityValue, powerValue, bioValue;
+    private Context context;
+    private EditText cName, cAge, cSpecies,cPersonality,cFamily,cBiography,cPowers;
+    private ImageView uploadImage;
+    private CharacterInformation oc;
+    private String nameValue, ageValue, speciesValue, familyValue, personalityValue, powerValue, bioValue;
+    private FirebaseStorage storage;
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -39,6 +42,9 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated (savedInstanceState);
+        storage = FirebaseStorage.getInstance(); //storage initilization
+        includesForCreateReference();
+
         Button buttonLoadImage = (Button) getView().findViewById (R.id.submit_character_button);
         uploadImage = (ImageView) getView().findViewById (R.id.uploadCharacter);
 
@@ -93,30 +99,50 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult (requestCode, resultCode, data);
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
-            Uri selectedImage = data.getData();
-            uploadImage.setImageURI(selectedImage);  //set the imageview in the box
+            Uri selectedImage = data.getData ();
+            uploadImage.setImageURI (selectedImage);  //set the imageview in the box
 
         }
- /*   @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //super method removed
-            if (resultCode == RESULT_OK) {
-                if (requestCode == 1000) {
-                    Uri returnUri = data.getData ();
-                    try {
-                        Bitmap bitmapImage = MediaStore.Images.Media.getBitmap (getActivity().getContentResolver (), returnUri);
-                        uploadImage.setImageBitmap (bitmapImage);
-                    } catch(IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
-    */
     }
+        public void includesForCreateReference() {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
+            StorageReference imagesRef = storageRef.child("images");
 
+            StorageReference spaceRef = storageRef.child("images/space.jpg");
+            imagesRef = spaceRef.getParent();
+            StorageReference rootRef = spaceRef.getRoot();
+            StorageReference earthRef = spaceRef.getParent().child("earth.jpg");
+
+            StorageReference nullRef = spaceRef.getRoot().getParent();
+
+            spaceRef.getPath();
+            spaceRef.getName();
+            spaceRef.getBucket();
+
+            storageRef = storage.getReference();
+
+            imagesRef = storageRef.child("images");
+
+            String fileName = "space.jpg";
+            spaceRef = imagesRef.child(fileName);
+
+            String path = spaceRef.getPath();
+            String name = spaceRef.getName();
+            imagesRef = spaceRef.getParent();
+        }
+
+    private void uploadImages(Uri uri) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        storageRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).putFile(uri);
+
+    }
     public void createCharacter() {
-        // CharacterInformation oc = new CharacterInformation(uploadImage.getResources (), nameValue, ageValue,speciesValue, personalityValue,familyValue, bioValue );
-        //Then the method will add/save the new character to the database
+        String imageUpload = uploadImage.getResources().toString ();
+
+        CharacterInformation oc = new CharacterInformation(imageUpload, nameValue, ageValue,speciesValue,  personalityValue,powerValue,familyValue, bioValue );
+
 
     }
 
