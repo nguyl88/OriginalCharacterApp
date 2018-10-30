@@ -46,6 +46,9 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_layout);
+        // Initialize Firebase Auth
+        firebaseAuth = FirebaseAuth.getInstance();
+
         txtUsername = (EditText)findViewById(R.id.txt_username);
         txtEmail = (EditText)findViewById(R.id.txt_email);
         txtPassword = (EditText)findViewById(R.id.txt_password);
@@ -61,8 +64,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
         String newUsername = txtUsername.getText().toString().trim();
 
 
-        // Initialize Firebase Auth
-        firebaseAuth = FirebaseAuth.getInstance();
+
     }
 
     @Override
@@ -164,7 +166,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
     private void toastMessage(String message) {
         Toast.makeText(this,message, Toast.LENGTH_SHORT).show();
     }
-    @Override
+   /* @Override
+   //Temporary comment, but it will give null pointer exception
     public void onStart() {
         super.onStart();
         firebaseAuth.addAuthStateListener(mAuthListener);
@@ -176,6 +179,6 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
         if (mAuthListener != null) {
             firebaseAuth.removeAuthStateListener(mAuthListener);
         }
-    }
+    }*/
 
 }

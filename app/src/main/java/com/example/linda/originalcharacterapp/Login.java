@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,7 +32,7 @@ public class Login extends AppCompatActivity implements  View.OnClickListener {
     private View mProgressView;
     private View mLoginFormView;
     private Button registerButton;
-    ProgressBar progressBar;
+ //  ProgressBar progressBar;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseUser user = FirebaseAuth.getInstance ().getCurrentUser ();
@@ -66,7 +65,7 @@ public class Login extends AppCompatActivity implements  View.OnClickListener {
                 startActivity(new Intent(this, Register.class));
                 break;
 
-            case R.id.email_login_form:
+            case R.id.email_sign_in_button:
                 userLogin();
                 break;
         }
@@ -122,12 +121,12 @@ public class Login extends AppCompatActivity implements  View.OnClickListener {
             return;
         }
 
-        progressBar.setVisibility(View.VISIBLE);
+    //    progressBar.setVisibility(View.VISIBLE);
 
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult> () {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                progressBar.setVisibility(View.GONE);
+           //     progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()) {
                     finish();
                     Intent intent = new Intent(Login.this, MainUserActivity.class);

@@ -15,6 +15,7 @@ import android.widget.ImageView;
 
 import com.example.linda.originalcharacterapp.utils.RecycleViewAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class HomeFragment extends Fragment {
     private Integer[] testImages = new Integer[]{
@@ -32,6 +33,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private FirebaseAuth firebaseAuth;
+    private FirebaseDatabase database;
 
     private ImageView imageSelection;
 
@@ -59,12 +61,15 @@ public class HomeFragment extends Fragment {
         // mRecyclerView.setLayoutManager (mLayoutManager);
         mRecyclerView.setLayoutManager(new GridLayoutManager (this.getActivity(),2));
 
-        // specify an adapter (see also next example)
-        mAdapter = new RecycleViewAdapter (testImages);
+           // specify an adapter (see also next example)
+        mAdapter = new RecycleViewAdapter (testImages); //where the image is inserted
         mRecyclerView.setAdapter(mAdapter);
 
 }
 
+    private void viewGallery() {
+
+    }
     /*private ArrayList<CharacterInformation> prepareData() {
         ArrayList<CharacterInformation> theimage = new ArrayList<>();
         for(int i = 0; i < testImages.length; i++){

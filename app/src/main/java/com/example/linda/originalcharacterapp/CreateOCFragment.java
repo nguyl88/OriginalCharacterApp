@@ -18,6 +18,7 @@ import android.widget.ImageView;
 
 import com.example.linda.originalcharacterapp.model.CharacterInformation;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -31,6 +32,9 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
     private CharacterInformation oc;
     private String nameValue, ageValue, speciesValue, familyValue, personalityValue, powerValue, bioValue;
     private FirebaseStorage storage;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser user;
+
 
 
     @Nullable
@@ -89,8 +93,8 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
                 break;
 
             case R.id.submit_character_button:
+                createCharacter();
                 break;
-            //case R.id.buttonDownload
         }
 
 
@@ -132,15 +136,15 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
             imagesRef = spaceRef.getParent();
         }
 
-    private void uploadImages(Uri uri) {
+    private void uploadCharacter(Uri uri) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         storageRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).putFile(uri);
 
     }
     public void createCharacter() {
+        FirebaseAuth.getInstance().getCurrentUser().getUid(); //get user id to save the objects
         String imageUpload = uploadImage.getResources().toString ();
-
         CharacterInformation oc = new CharacterInformation(imageUpload, nameValue, ageValue,speciesValue,  personalityValue,powerValue,familyValue, bioValue );
 
 
