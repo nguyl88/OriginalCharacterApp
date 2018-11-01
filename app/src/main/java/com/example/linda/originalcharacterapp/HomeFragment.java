@@ -56,9 +56,7 @@ public class HomeFragment extends Fragment {
         // use this setting to improve performance if you know that changes in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
 
-        // use a linear layout manager
         mLayoutManager = new LinearLayoutManager (this.getActivity());
-        // mRecyclerView.setLayoutManager (mLayoutManager);
         mRecyclerView.setLayoutManager(new GridLayoutManager (this.getActivity(),2));
 
            // specify an adapter (see also next example)

@@ -13,21 +13,21 @@ import com.example.linda.originalcharacterapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder> {
+public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
         private Integer[] mDataset;
-    //    private ArrayList<Integer> mDataset;
         private Context context;
-     //  private ArrayList<CharacterInformation>;
+    //  private List<ImageView> mDataset;
      private FirebaseFirestore firebaseFirestore;
      private FirebaseAuth firebaseAuth;
 
-        public static class MyViewHolder extends RecyclerView.ViewHolder {
-            // each data item is just a string in this case
+        public static class ViewHolder extends RecyclerView.ViewHolder {
             private ImageView image;
-            private MyViewHolder(View view) {
+
+            private ViewHolder(View view) {
                 super(view);
                image = (ImageView) view.findViewById(R.id.recycleImage);
             }
+
         }
 
         public RecycleViewAdapter(Integer[] myDataset) {
@@ -35,18 +35,19 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         }
 
         @Override
-        public RecycleViewAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
+        public RecycleViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                          int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_row, parent, false);
-            MyViewHolder vh = new MyViewHolder(view);
+            ViewHolder vh = new ViewHolder(view);
             return vh;
         }
 
         @Override
-        public void onBindViewHolder(MyViewHolder holder, int position) {
+        public void onBindViewHolder(ViewHolder holder, int position) {
 
             holder.image.setScaleType (ImageView.ScaleType.CENTER_CROP);
             holder.image.setImageResource (mDataset[position]);
+
 
             holder.image.setOnClickListener (new View.OnClickListener () {
 
@@ -65,6 +66,10 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             return mDataset.length;
         }
 
+//        public CharacterInformation getItem(int position) {
+//            return mDataset.get(position);
+//        }
     public void setCharacterImage(String downloadUri, String thumbUri){
+
     }
     }

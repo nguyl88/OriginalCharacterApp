@@ -3,6 +3,7 @@ package com.example.linda.originalcharacterapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -15,12 +16,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.linda.originalcharacterapp.model.CharacterInformation;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.IOException;
+import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -31,11 +40,16 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
     private ImageView uploadImage;
     private CharacterInformation oc;
     private String nameValue, ageValue, speciesValue, familyValue, personalityValue, powerValue, bioValue;
+    private Uri selectedImage;
+    private Bitmap compressedImageFile;
+
+    //Firebase
     private FirebaseStorage storage;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser user;
+    private StorageReference storageReference;
 
-
+    private String currentUserID;
 
     @Nullable
     @Override
@@ -46,8 +60,13 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated (savedInstanceState);
-        storage = FirebaseStorage.getInstance(); //storage initilization
-        includesForCreateReference();
+
+       // storageReference = FirebaseStorage.getInstance(); //storage initilization
+        storage = FirebaseStorage.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
+        //storageReference =  FirebaseStorage.getInstance().getReference();
+        firebaseAuth = FirebaseAuth.getInstance();
+       // currentUserID =  firebaseAuth.getCurrentUser().getUid();
 
         Button buttonLoadImage = (Button) getView().findViewById (R.id.submit_character_button);
         uploadImage = (ImageView) getView().findViewById (R.id.uploadCharacter);
@@ -78,7 +97,7 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
         buttonLoadImage.setOnClickListener(new View.OnClickListener () {
             @Override
             public void onClick(View view) {
-                createCharacter();
+                uploadOC ();
             }
         });
 
@@ -88,12 +107,11 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.uploadCharacter:
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult (galleryIntent,RESULT_LOAD_IMAGE);
+                chooseImage();
                 break;
 
             case R.id.submit_character_button:
-                createCharacter();
+                uploadOC();
                 break;
         }
 
@@ -103,51 +121,83 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult (requestCode, resultCode, data);
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
-            Uri selectedImage = data.getData ();
+            selectedImage = data.getData ();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getApplicationContext().getContentResolver(),
+                        selectedImage);
+                uploadImage.setImageBitmap(bitmap);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
             uploadImage.setImageURI (selectedImage);  //set the imageview in the box
-
         }
+
     }
-        public void includesForCreateReference() {
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageRef = storage.getReference();
-            StorageReference imagesRef = storageRef.child("images");
 
-            StorageReference spaceRef = storageRef.child("images/space.jpg");
-            imagesRef = spaceRef.getParent();
-            StorageReference rootRef = spaceRef.getRoot();
-            StorageReference earthRef = spaceRef.getParent().child("earth.jpg");
-
-            StorageReference nullRef = spaceRef.getRoot().getParent();
-
-            spaceRef.getPath();
-            spaceRef.getName();
-            spaceRef.getBucket();
-
-            storageRef = storage.getReference();
-
-            imagesRef = storageRef.child("images");
-
-            String fileName = "space.jpg";
-            spaceRef = imagesRef.child(fileName);
-
-            String path = spaceRef.getPath();
-            String name = spaceRef.getName();
-            imagesRef = spaceRef.getParent();
-        }
-
-    private void uploadCharacter(Uri uri) {
+  /*  private void uploadCharacter(Uri uri) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         storageRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).putFile(uri);
 
+    }*/
+    private void chooseImage() {
+       Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+      //  Intent intent = new Intent();
+        galleryIntent.setType("image/*");
+   //     galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult (galleryIntent,RESULT_LOAD_IMAGE);
+
+      //  startActivityForResult(Intent.createChooser(galleryIntent, "Select Picture"), RESULT_LOAD_IMAGE);
     }
+    private void uploadOC() {
+        if (selectedImage != null) {
+            storageReference = storageReference.child ("images/" + UUID.randomUUID ().toString ());
+            storageReference.putFile (selectedImage)
+                    .addOnSuccessListener (new OnSuccessListener<UploadTask.TaskSnapshot> () {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText (getActivity (), "Uploaded", Toast.LENGTH_SHORT).show ();
+                        }
+                    })
+                    .addOnFailureListener (new OnFailureListener () {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText (getActivity (), "Failed " + e.getMessage (), Toast.LENGTH_SHORT).show ();
+                        }
+                    })
+                    .addOnProgressListener (new OnProgressListener<UploadTask.TaskSnapshot> () {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred () / taskSnapshot
+                                    .getTotalByteCount ());
+                        }
+                    });
+        }
+    }
+
     public void createCharacter() {
-        FirebaseAuth.getInstance().getCurrentUser().getUid(); //get user id to save the objects
-        String imageUpload = uploadImage.getResources().toString ();
-        CharacterInformation oc = new CharacterInformation(imageUpload, nameValue, ageValue,speciesValue,  personalityValue,powerValue,familyValue, bioValue );
+     /*   String imageUpload = uploadImage.getResources().toString ();
+
+        if(!TextUtils.isEmpty(nameValue) &&  characterImage != null) {
+            final String randomName = UUID.randomUUID().toString();
+            File newImageFile = new File(characterImage.getPath());
+
+            try {
 
 
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            //Photo Upload
+
+            CharacterInformation oc = new CharacterInformation (imageUpload, nameValue, ageValue, speciesValue, personalityValue, powerValue, familyValue, bioValue);
+        }
+
+    */
     }
 
 }
