@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -40,7 +43,7 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
     private ImageView uploadImage;
     private CharacterInformation oc;
     private String nameValue, ageValue, speciesValue, familyValue, personalityValue, powerValue, bioValue;
-    private Uri selectedImage;
+    private Uri selectedImage = null;
     private Bitmap compressedImageFile;
 
     //Firebase
@@ -48,6 +51,7 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
     private FirebaseAuth firebaseAuth;
     private FirebaseUser user;
     private StorageReference storageReference;
+    private DatabaseReference databaseReference;
 
     private String currentUserID;
 
@@ -66,31 +70,19 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
         storageReference = FirebaseStorage.getInstance().getReference();
         //storageReference =  FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance ().getReference ().child("Character");
        // currentUserID =  firebaseAuth.getCurrentUser().getUid();
 
         Button buttonLoadImage = (Button) getView().findViewById (R.id.submit_character_button);
         uploadImage = (ImageView) getView().findViewById (R.id.uploadCharacter);
 
         cName = (EditText) getView().findViewById (R.id.characterName);
-        nameValue = cName.getText().toString();
-
         cAge = (EditText) getView().findViewById (R.id.characterAge);
-        ageValue = cAge.getText().toString();
-
         cSpecies = (EditText) getView().findViewById (R.id.characterSpecies);
-        speciesValue = cSpecies.getText().toString();
-
         cPersonality = (EditText) getView().findViewById (R.id.characterPersonality);
-        personalityValue = cPersonality.getText().toString();
-
         cFamily = (EditText) getView().findViewById (R.id.characterFamily);
-        familyValue = cFamily.getText().toString();
-
         cPowers = (EditText) getView().findViewById (R.id.characterPowers);
-        powerValue = cPowers.getText().toString();
-
         cBiography = (EditText) getView().findViewById (R.id.characterBios);
-        bioValue = cBiography.getText().toString();
 
         uploadImage.setOnClickListener (this);
         // buttonLoadImage.setOnClickListener (this);
@@ -136,12 +128,6 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
 
     }
 
-  /*  private void uploadCharacter(Uri uri) {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        storageRef.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).putFile(uri);
-
-    }*/
     private void chooseImage() {
        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
       //  Intent intent = new Intent();
@@ -151,53 +137,58 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
 
       //  startActivityForResult(Intent.createChooser(galleryIntent, "Select Picture"), RESULT_LOAD_IMAGE);
     }
+
     private void uploadOC() {
-        if (selectedImage != null) {
-            storageReference = storageReference.child ("images/" + UUID.randomUUID ().toString ());
-            storageReference.putFile (selectedImage)
-                    .addOnSuccessListener (new OnSuccessListener<UploadTask.TaskSnapshot> () {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText (getActivity (), "Uploaded", Toast.LENGTH_SHORT).show ();
-                        }
-                    })
-                    .addOnFailureListener (new OnFailureListener () {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText (getActivity (), "Failed " + e.getMessage (), Toast.LENGTH_SHORT).show ();
-                        }
-                    })
-                    .addOnProgressListener (new OnProgressListener<UploadTask.TaskSnapshot> () {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0 * taskSnapshot.getBytesTransferred () / taskSnapshot
-                                    .getTotalByteCount ());
-                        }
-                    });
+        //String values
+        nameValue = cName.getText ().toString ().trim ();
+        ageValue = cAge.getText ().toString ().trim ();
+        speciesValue = cSpecies.getText ().toString ().trim();
+        personalityValue = cPersonality.getText ().toString ().trim();
+        familyValue = cFamily.getText ().toString ().trim();
+        powerValue = cPowers.getText ().toString ().trim();
+        bioValue = cBiography.getText ().toString ().trim();
+
+        if (!TextUtils.isEmpty (nameValue) && selectedImage != null) {
+
+                storageReference = storageReference.child ("characters/" + UUID.randomUUID ().toString ());
+                storageReference.putFile (selectedImage)
+                        .addOnSuccessListener (new OnSuccessListener<UploadTask.TaskSnapshot> () {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                Uri downloadImage = taskSnapshot.getUploadSessionUri ();
+
+                                DatabaseReference newPost = databaseReference.push (); //creates unique random id
+                                newPost.child("Character Name").setValue(nameValue);
+                                newPost.child("Age").setValue(ageValue);
+                                newPost.child("Species").setValue(speciesValue);
+                                newPost.child("Personality").setValue(personalityValue);
+                                newPost.child("Family").setValue(familyValue);
+                                newPost.child("Powers").setValue(powerValue);
+                                newPost.child("Biography").setValue(bioValue);
+                                newPost.child("Image").setValue(downloadImage.toString());
+
+                                Toast.makeText (getActivity (), "Uploaded", Toast.LENGTH_SHORT).show ();
+
+                            }
+                        })
+                        .addOnFailureListener (new OnFailureListener () {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText (getActivity (), "Failed " + e.getMessage (), Toast.LENGTH_SHORT).show ();
+                            }
+                        })
+                        .addOnProgressListener (new OnProgressListener<UploadTask.TaskSnapshot> () {
+                            @Override
+                            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                double progress = (100.0 * taskSnapshot.getBytesTransferred () / taskSnapshot
+                                        .getTotalByteCount ());
+                            }
+                        });
+
         }
-    }
-
-    public void createCharacter() {
-     /*   String imageUpload = uploadImage.getResources().toString ();
-
-        if(!TextUtils.isEmpty(nameValue) &&  characterImage != null) {
-            final String randomName = UUID.randomUUID().toString();
-            File newImageFile = new File(characterImage.getPath());
-
-            try {
-
-
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            //Photo Upload
-
-            CharacterInformation oc = new CharacterInformation (imageUpload, nameValue, ageValue, speciesValue, personalityValue, powerValue, familyValue, bioValue);
+        else {
+            Toast.makeText (getActivity (), "Character needs name", Toast.LENGTH_SHORT).show ();
         }
-
-    */
     }
 
 }

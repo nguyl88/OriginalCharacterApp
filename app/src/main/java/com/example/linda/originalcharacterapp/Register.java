@@ -40,7 +40,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference myRef;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +124,11 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
             public void onComplete(@NonNull Task<AuthResult> task) {
                 progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()) {
+                    String userid = firebaseAuth.getCurrentUser().getUid(); //Get user id
+                    DatabaseReference current_user_ref = mDatabase.child(userid);
+                    current_user_ref.child("email").setValue(newEmail);
+                    current_user_ref.child("password").setValue(newPassword);
+                    current_user_ref.child("username").setValue(newUsername);
                     finish();
                     startActivity(new Intent(Register.this, MainUserActivity.class));
                 } else {

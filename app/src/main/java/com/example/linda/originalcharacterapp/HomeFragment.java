@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.linda.originalcharacterapp.utils.RecycleViewAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -82,4 +83,26 @@ public class HomeFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    public static class viewGalleryHolder extends RecyclerView.ViewHolder {
+        View itemView;
+        public viewGalleryHolder(View itemView) {
+            super(itemView);
+
+            itemView = itemView;
+        }
+
+        public void setTitle(String title) {
+            TextView postTitle = (TextView) itemView.findViewById (R.id.characterName);
+            postTitle.setText(title);
+        }
+
+        public void setCharacterInfo() {
+
+        }
+
+    }
+
+
 }
+
+
