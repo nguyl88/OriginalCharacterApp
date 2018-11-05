@@ -37,4 +37,5 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_redo_user">RedoUserActivity</string>
+    <string name="current_user">Current User</string>
 </resources>

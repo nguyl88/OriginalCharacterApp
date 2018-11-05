@@ -7,15 +7,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
@@ -90,6 +91,9 @@ public class SettingsFragment extends Fragment {
                                     }
                                 });
                     }
+                    else {
+                        Toast.makeText(getActivity(), "The field are empty", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
             }
@@ -98,12 +102,13 @@ public class SettingsFragment extends Fragment {
         deleteAccountButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                firebaseUser.delete()
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                firebaseUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     Log.d(TAG, "User account deleted.");
+                                    Intent intent = new Intent (getActivity (), Login.class); //returns to login page
+                                    startActivity (intent);
                                 }
                             }
                         });
@@ -137,70 +142,5 @@ public class SettingsFragment extends Fragment {
             this.listener = (MainUserActivity) context;
         }
     }
-//    public void deleteAccount() {
-//        deleteAccountButton.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View view) {
-//                firebaseUser.delete()
-//                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                            @Override
-//                            public void onComplete(@NonNull Task<Void> task) {
-//                                if (task.isSuccessful()) {
-//                                    Log.d(TAG, "User account deleted.");
-//                                }
-//                            }
-//                        });
-//            }
-//        });
-//    }
-//    public void updateInfo() {
-//        saveButton.setOnClickListener (new View.OnClickListener() {
-//            String newUsername, newEmail, newPassword;
-//            @Override
-//            public void onClick(View view) {
-//                if(firebaseAuth.getCurrentUser() != null) {
-//                    String name = firebaseUser.getDisplayName();
-//                    String email = firebaseUser.getEmail();
-//
-//                    // Check if user's email is verified
-//                    boolean emailVerified = firebaseUser.isEmailVerified();
-//                    String uid = firebaseUser.getUid();//Check unique id
-//
-//                    if(txtEmail.getText().toString() != null) {
-//                        newEmail = txtEmail.getText().toString();
-//                        firebaseUser.updateEmail(newEmail)
-//                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                    @Override
-//                                    public void onComplete(@NonNull Task<Void> task) {
-//                                        if (task.isSuccessful()) {
-//                                            Log.d(TAG, "User email address updated.");
-//                                        }
-//                                    }
-//                                });
-//                    }
-//
-//                    else if (txtPassword.getText().toString() != null) {
-//                        newPassword = txtPassword.getText().toString();
-//                        firebaseUser.updatePassword(newPassword)
-//                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                    @Override
-//                                    public void onComplete(@NonNull Task<Void> task) {
-//                                        if (task.isSuccessful()) {
-//                                            Log.d(TAG, "User password updated.");
-//                                        }
-//                                    }
-//                                });
-//                    }
-//                }
-//
-//            }
-//        });
-//    }
-//    public void logout() {
-//        if (firebaseAuth.getCurrentUser () != null)
-//            firebaseAuth.signOut ();
-//        Intent intent = new Intent (getActivity (), Login.class); //returns to login page
-//        startActivity (intent);
-//    }
 
 }

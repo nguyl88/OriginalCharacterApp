@@ -20,19 +20,20 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 //This will open the register format for the user to enter the information
-public class Register extends AppCompatActivity implements View.OnClickListener{
-  //  SQLiteOpenHelper openHelper;
-  //  SQLiteDatabase db;
+public class Register extends AppCompatActivity implements View.OnClickListener {
+    //  SQLiteOpenHelper openHelper;
+    //  SQLiteDatabase db;
 
-    private EditText txtUsername, txtEmail,txtPassword;
+    private EditText txtUsername, txtEmail, txtPassword;
     private UserInformation newUser;
-//    private String newUsername, newEmail, newPassword;
-    private  UserHelper databaseHelper;
-    private static final String TAG  = "Register";
+    //    private String newUsername, newEmail, newPassword;
+    private UserHelper databaseHelper;
+    private static final String TAG = "Register";
     private TextView existAccount;
 
     //Firebase
@@ -41,46 +42,48 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabase;
+    private FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.register_layout);
+        super.onCreate (savedInstanceState);
+        setContentView (R.layout.register_layout);
         // Initialize Firebase Auth
-        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance ();
+        firebaseUser = firebaseAuth.getCurrentUser ();
+        mDatabase = FirebaseDatabase.getInstance ().getReference ().child ("User Account");
 
-        txtUsername = (EditText)findViewById(R.id.txt_username);
-        txtEmail = (EditText)findViewById(R.id.txt_email);
-        txtPassword = (EditText)findViewById(R.id.txt_password);
-        databaseHelper = new UserHelper(this);
-        existAccount = findViewById(R.id.existing_account);
-        progressBar = findViewById(R.id.progress_register);
+        txtUsername = (EditText) findViewById (R.id.txt_username);
+        txtEmail = (EditText) findViewById (R.id.txt_email);
+        txtPassword = (EditText) findViewById (R.id.txt_password);
+        databaseHelper = new UserHelper (this);
+        existAccount = findViewById (R.id.existing_account);
+        progressBar = findViewById (R.id.progress_register);
 
-        Button createButton = (Button)findViewById(R.id.create_account);
-        Button goBackButton = (Button)findViewById(R.id.tologin);
-        createButton.setOnClickListener(this);
-        String newEmail = txtEmail.getText().toString().trim();
-        String newPassword = txtPassword.getText().toString().trim();
-        String newUsername = txtUsername.getText().toString().trim();
-
+        Button createButton = (Button) findViewById (R.id.create_account);
+        Button goBackButton = (Button) findViewById (R.id.tologin);
+        createButton.setOnClickListener (this);
+        String newEmail = txtEmail.getText ().toString ().trim ();
+        String newPassword = txtPassword.getText ().toString ().trim ();
+        String newUsername = txtUsername.getText ().toString ().trim ();
 
 
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
+        switch (view.getId ()) {
 
             case R.id.create_account:
-                String newEmail = txtEmail.getText().toString().trim();
-                String newPassword = txtPassword.getText().toString().trim();
-                String newUsername = txtUsername.getText().toString().trim();
-                registerUser(newEmail, newPassword, newUsername);
+                String newEmail = txtEmail.getText ().toString ().trim ();
+                String newPassword = txtPassword.getText ().toString ().trim ();
+                String newUsername = txtUsername.getText ().toString ().trim ();
+                registerUser (newEmail, newPassword, newUsername);
                 break;
 
             case R.id.existing_account:
-                finish();
-                startActivity(new Intent(this, Login.class));
+                finish ();
+                startActivity (new Intent (this, Login.class));
                 break;
 
             case R.id.tologin:
@@ -91,53 +94,54 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
 
     private void registerUser(final String newEmail, final String newPassword, final String newUsername) {
 
-        if (TextUtils.isEmpty(newEmail)) {
-        Toast.makeText (this, "Please enter email", Toast.LENGTH_SHORT).show();
-        return;
-        }
-
-        if (TextUtils.isEmpty(newPassword)) {
-            Toast.makeText (this, "Please enter password", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (TextUtils.isEmpty(newUsername)) {
-            Toast.makeText (this, "Please enter username", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty (newEmail)) {
+            Toast.makeText (this, "Please enter email", Toast.LENGTH_SHORT).show ();
             return;
         }
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(newEmail).matches()) {
-            txtEmail.setError("Please enter a valid email");
-            txtEmail.requestFocus();
+        if (TextUtils.isEmpty (newPassword)) {
+            Toast.makeText (this, "Please enter password", Toast.LENGTH_SHORT).show ();
+            return;
+        }
+        if (TextUtils.isEmpty (newUsername)) {
+            Toast.makeText (this, "Please enter username", Toast.LENGTH_SHORT).show ();
             return;
         }
 
-        if (newPassword.length() < 6) {
-            txtPassword.setError("Minimum lenght of password should be 6");
-            txtPassword.requestFocus();
+        if (!Patterns.EMAIL_ADDRESS.matcher (newEmail).matches ()) {
+            txtEmail.setError ("Please enter a valid email");
+            txtEmail.requestFocus ();
             return;
         }
 
-        progressBar.setVisibility(View.VISIBLE);
+        if (newPassword.length () < 6) {
+            txtPassword.setError ("Minimum length of password should be 6");
+            txtPassword.requestFocus ();
+            return;
+        }
 
-        firebaseAuth.createUserWithEmailAndPassword(newEmail, newPassword).addOnCompleteListener(new OnCompleteListener<AuthResult> () {
+        progressBar.setVisibility (View.VISIBLE);
+
+        firebaseAuth.createUserWithEmailAndPassword (newEmail, newPassword).addOnCompleteListener (new OnCompleteListener<AuthResult> () {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                progressBar.setVisibility(View.GONE);
-                if (task.isSuccessful()) {
-                    String userid = firebaseAuth.getCurrentUser().getUid(); //Get user id
-                    DatabaseReference current_user_ref = mDatabase.child(userid);
-                    current_user_ref.child("email").setValue(newEmail);
-                    current_user_ref.child("password").setValue(newPassword);
-                    current_user_ref.child("username").setValue(newUsername);
-                    finish();
-                    startActivity(new Intent(Register.this, MainUserActivity.class));
+                progressBar.setVisibility (View.GONE);
+                if (task.isSuccessful ()) {
+                    String userid = firebaseAuth.getCurrentUser ().getUid (); //Get user id
+                    DatabaseReference current_user_ref = mDatabase.child (userid);
+                    current_user_ref.child ("email").setValue (newEmail);
+                    current_user_ref.child ("password").setValue (newPassword);
+                    current_user_ref.child ("username").setValue (newUsername);
+                    current_user_ref.child ("user_id").setValue (userid);
+                    finish ();
+                    startActivity (new Intent (Register.this, MainUserActivity.class));
                 } else {
 
-                    if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                        Toast.makeText(getApplicationContext(), "You are already registered", Toast.LENGTH_SHORT).show();
+                    if (task.getException () instanceof FirebaseAuthUserCollisionException) {
+                        Toast.makeText (getApplicationContext (), "You are already registered", Toast.LENGTH_SHORT).show ();
 
                     } else {
-                        Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText (getApplicationContext (), task.getException ().getMessage (), Toast.LENGTH_SHORT).show ();
                     }
 
                 }
@@ -150,9 +154,10 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
         Intent intent = new Intent (Register.this, MainUserActivity.class);
         startActivity (intent);
     }
+
     private boolean notEmpty() {
-        if (txtEmail.length() != 0 && txtPassword.length() != 0 && txtUsername.length() != 0)
-        return true;
+        if (txtEmail.length () != 0 && txtPassword.length () != 0 && txtUsername.length () != 0)
+            return true;
         else return false;
     }
 
@@ -162,28 +167,32 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
     }
 
     public void createUserData(UserInformation newUser) {
-        boolean insertData = databaseHelper.insertUserData(newUser);
+        boolean insertData = databaseHelper.insertUserData (newUser);
 
         if (insertData) {
             toastMessage ("New user successfully inserted");
         } else toastMessage ("New user did not insert. ");
     }
+
     private void toastMessage(String message) {
-        Toast.makeText(this,message, Toast.LENGTH_SHORT).show();
+        Toast.makeText (this, message, Toast.LENGTH_SHORT).show ();
     }
-   /* @Override
-   //Temporary comment, but it will give null pointer exception
+
+    @Override
     public void onStart() {
-        super.onStart();
-        firebaseAuth.addAuthStateListener(mAuthListener);
+        super.onStart ();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser ();
+        if (currentUser != null) {
+            openAccount ();
+        }
+        //  firebaseAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
     public void onStop() {
-        super.onStop();
+        super.onStop ();
         if (mAuthListener != null) {
-            firebaseAuth.removeAuthStateListener(mAuthListener);
+            firebaseAuth.removeAuthStateListener (mAuthListener);
         }
-    }*/
-
+    }
 }

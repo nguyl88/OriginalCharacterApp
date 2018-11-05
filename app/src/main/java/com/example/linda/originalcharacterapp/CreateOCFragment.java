@@ -32,6 +32,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
@@ -52,6 +54,7 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
     private FirebaseUser user;
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
+
 
     private String currentUserID;
 
@@ -75,7 +78,6 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
 
         Button buttonLoadImage = (Button) getView().findViewById (R.id.submit_character_button);
         uploadImage = (ImageView) getView().findViewById (R.id.uploadCharacter);
-
         cName = (EditText) getView().findViewById (R.id.characterName);
         cAge = (EditText) getView().findViewById (R.id.characterAge);
         cSpecies = (EditText) getView().findViewById (R.id.characterSpecies);
@@ -106,8 +108,6 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
                 uploadOC();
                 break;
         }
-
-
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -147,6 +147,7 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
         familyValue = cFamily.getText ().toString ().trim();
         powerValue = cPowers.getText ().toString ().trim();
         bioValue = cBiography.getText ().toString ().trim();
+        currentUserID = firebaseAuth.getCurrentUser().getUid();
 
         if (!TextUtils.isEmpty (nameValue) && selectedImage != null) {
 
@@ -156,7 +157,7 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                 Uri downloadImage = taskSnapshot.getUploadSessionUri ();
-
+                                Map<String, CharacterInformation> users = new HashMap<> ();
                                 DatabaseReference newPost = databaseReference.push (); //creates unique random id
                                 newPost.child("Character Name").setValue(nameValue);
                                 newPost.child("Age").setValue(ageValue);
@@ -166,6 +167,10 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
                                 newPost.child("Powers").setValue(powerValue);
                                 newPost.child("Biography").setValue(bioValue);
                                 newPost.child("Image").setValue(downloadImage.toString());
+                                newPost.child("User_ID").setValue(currentUserID);
+
+                                users.put(nameValue, new CharacterInformation (currentUserID, downloadImage.toString(),nameValue, ageValue, speciesValue,
+                                        personalityValue, familyValue, powerValue, bioValue));
 
                                 Toast.makeText (getActivity (), "Uploaded", Toast.LENGTH_SHORT).show ();
 

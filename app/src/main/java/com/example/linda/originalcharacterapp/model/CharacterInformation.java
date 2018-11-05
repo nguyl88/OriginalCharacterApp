@@ -22,20 +22,9 @@ public class CharacterInformation implements Parcelable {
     public CharacterInformation()  {
 
     }
-    public CharacterInformation(String characterImage, String characterName, String characterAge,
-                                String characterSpecies,String characterPowers, String characterPersonality, String characterFamily,
-                                String characterBio) {
-        this.characterName = characterName;
-        this.characterAge = characterAge;
-        this.characterSpecies = characterSpecies;
-        this.characterPersonality = characterPersonality;
-        this.characterPowers = characterPowers;
-        this.characterFamily = characterFamily;
-        this.characterBio = characterBio;
-        this.characterImage = characterImage;
-    }
 
-    public CharacterInformation(String user_id,String photo_id,String characterImage, String characterName, String characterAge,
+
+    public CharacterInformation(String user_id,String characterImage, String characterName, String characterAge,
                                 String characterPowers,String characterSpecies, String characterPersonality, String characterFamily,
                                 String characterBio) {
         this.user_id = user_id;
