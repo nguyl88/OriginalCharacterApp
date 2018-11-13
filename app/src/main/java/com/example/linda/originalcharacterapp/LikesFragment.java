@@ -12,12 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.example.linda.originalcharacterapp.utils.RecycleViewAdapter;
-
 
 public class LikesFragment extends Fragment {
     // references to the temporary images.
-    private Integer[] testImages = new Integer[]{
+  /*  private Integer[] testImages = new Integer[]{
             R.mipmap.crow, R.mipmap.hengfather,
             R.mipmap.futurecity, R.mipmap.rosalina,
             R.mipmap.yin, R.mipmap.zero,
@@ -25,7 +23,7 @@ public class LikesFragment extends Fragment {
             R.mipmap.blacksnow, R.mipmap.rosalina,
             R.mipmap.yin, R.mipmap.zero,
 
-    };
+    };*/
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -58,8 +56,8 @@ public class LikesFragment extends Fragment {
         mRecyclerView.setLayoutManager(new GridLayoutManager (this.getActivity(),2));
 
         // specify an adapter (see also next example)
-        mAdapter = new RecycleViewAdapter (testImages);
-        mRecyclerView.setAdapter(mAdapter);
+    //    mAdapter = new RecycleViewAdapter (testImages);
+      //  mRecyclerView.setAdapter(mAdapter);
 
     }
 }

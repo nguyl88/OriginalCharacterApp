@@ -1,6 +1,7 @@
 package com.example.linda.originalcharacterapp;
 
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -46,6 +48,7 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
     private CharacterInformation oc;
     private String nameValue, ageValue, speciesValue, familyValue, personalityValue, powerValue, bioValue;
     private Uri selectedImage = null;
+    private Uri downloadImage;
     private Bitmap compressedImageFile;
 
     //Firebase
@@ -73,7 +76,7 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
         storageReference = FirebaseStorage.getInstance().getReference();
         //storageReference =  FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
-        databaseReference = FirebaseDatabase.getInstance ().getReference ().child("Character");
+        databaseReference = FirebaseDatabase.getInstance ().getReference ();
        // currentUserID =  firebaseAuth.getCurrentUser().getUid();
 
         Button buttonLoadImage = (Button) getView().findViewById (R.id.submit_character_button);
@@ -149,30 +152,36 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
         bioValue = cBiography.getText ().toString ().trim();
         currentUserID = firebaseAuth.getCurrentUser().getUid();
 
-        if (!TextUtils.isEmpty (nameValue) && selectedImage != null) {
 
-                storageReference = storageReference.child ("characters/" + UUID.randomUUID ().toString ());
+        if (!TextUtils.isEmpty (nameValue) && selectedImage != null) {
+          //  StorageReference fileReference = storageReference.child(System.currentTimeMillis()+ "." + getFileExtension(downloadImage));
+
+            storageReference = storageReference.child("characterimage").child (currentUserID + "/" + UUID.randomUUID ().toString ()+ ".png");
+
                 storageReference.putFile (selectedImage)
-                        .addOnSuccessListener (new OnSuccessListener<UploadTask.TaskSnapshot> () {
+
+                         .addOnSuccessListener (new OnSuccessListener<UploadTask.TaskSnapshot> () {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Uri downloadImage = taskSnapshot.getUploadSessionUri ();
-                                Map<String, CharacterInformation> users = new HashMap<> ();
-                                DatabaseReference newPost = databaseReference.push (); //creates unique random id
-                                newPost.child("Character Name").setValue(nameValue);
-                                newPost.child("Age").setValue(ageValue);
-                                newPost.child("Species").setValue(speciesValue);
-                                newPost.child("Personality").setValue(personalityValue);
-                                newPost.child("Family").setValue(familyValue);
-                                newPost.child("Powers").setValue(powerValue);
-                                newPost.child("Biography").setValue(bioValue);
-                                newPost.child("Image").setValue(downloadImage.toString());
-                                newPost.child("User_ID").setValue(currentUserID);
+                               downloadImage = taskSnapshot.getUploadSessionUri ();
 
-                                users.put(nameValue, new CharacterInformation (currentUserID, downloadImage.toString(),nameValue, ageValue, speciesValue,
-                                        personalityValue, familyValue, powerValue, bioValue));
+                             //  String downloadPhoto = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
+                                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri downloadPhotoUrl) {
+                                        String characterId = databaseReference.child("characters").push ().getKey(); //creates unique random id
+                                CharacterInformation newCharacter =  new CharacterInformation (currentUserID, characterId, downloadPhotoUrl.toString(),nameValue, ageValue, speciesValue,
+                                        personalityValue, familyValue, powerValue, bioValue);
 
-                                Toast.makeText (getActivity (), "Uploaded", Toast.LENGTH_SHORT).show ();
+                                Map<String, Object> postValue = newCharacter.toMap();
+                                Map<String, Object> childUpdates = new HashMap<> ();
+                                databaseReference.child("User Account").child(currentUserID).child("character").child(characterId).setValue(newCharacter);
+
+                               // childUpdates.put(nameValue, newCharacter);
+                                databaseReference.updateChildren (childUpdates);
+                                Toast.makeText (getActivity (), "Uploaded" + newCharacter.getCharacterName(), Toast.LENGTH_SHORT).show ();
+                            }
+                         });
 
                             }
                         })
@@ -194,6 +203,19 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
         else {
             Toast.makeText (getActivity (), "Character needs name", Toast.LENGTH_SHORT).show ();
         }
+    }
+
+    private String getFileExtension(Uri uri) {
+        Context applicationContext = CreateOCFragment.getContextOfApplication();
+        ContentResolver cR =  applicationContext.getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cR.getType(uri));
+    }
+
+    public static Context contextOfApplication;
+    public static Context getContextOfApplication()
+    {
+        return contextOfApplication;
     }
 
 }

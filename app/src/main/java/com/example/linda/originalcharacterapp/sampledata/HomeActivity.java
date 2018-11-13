@@ -1,3 +1,4 @@
+/*
 package com.example.linda.originalcharacterapp.sampledata;
 
 import android.support.design.widget.BottomNavigationView;
@@ -72,3 +73,4 @@ public class HomeActivity extends AppCompatActivity {
 
 
 }
+*/

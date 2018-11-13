@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +22,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -30,8 +32,6 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     //  SQLiteDatabase db;
 
     private EditText txtUsername, txtEmail, txtPassword;
-    private UserInformation newUser;
-    //    private String newUsername, newEmail, newPassword;
     private UserHelper databaseHelper;
     private static final String TAG = "Register";
     private TextView existAccount;
@@ -50,7 +50,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         setContentView (R.layout.register_layout);
         // Initialize Firebase Auth
         firebaseAuth = FirebaseAuth.getInstance ();
-        firebaseUser = firebaseAuth.getCurrentUser ();
+        firebaseUser = firebaseAuth.getInstance().getCurrentUser ();
         mDatabase = FirebaseDatabase.getInstance ().getReference ().child ("User Account");
 
         txtUsername = (EditText) findViewById (R.id.txt_username);
@@ -128,11 +128,10 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 progressBar.setVisibility (View.GONE);
                 if (task.isSuccessful ()) {
                     String userid = firebaseAuth.getCurrentUser ().getUid (); //Get user id
+                    UserInformation userNew = new UserInformation(userid, newUsername, newEmail, newPassword);
                     DatabaseReference current_user_ref = mDatabase.child (userid);
-                    current_user_ref.child ("email").setValue (newEmail);
-                    current_user_ref.child ("password").setValue (newPassword);
-                    current_user_ref.child ("username").setValue (newUsername);
-                    current_user_ref.child ("user_id").setValue (userid);
+                    current_user_ref.child("users").setValue(userNew);
+                 //   setUserInfo(newUsername);
                     finish ();
                     startActivity (new Intent (Register.this, MainUserActivity.class));
                 } else {
@@ -149,7 +148,19 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         });
 
     }
+    private void setUserInfo(String newUsername) {
+      UserProfileChangeRequest  profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(newUsername).build();
+        firebaseUser.updateProfile(profileUpdates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "User profile updated.");
+                        }
+                    }
+                });
 
+    }
     private void openAccount() {
         Intent intent = new Intent (Register.this, MainUserActivity.class);
         startActivity (intent);

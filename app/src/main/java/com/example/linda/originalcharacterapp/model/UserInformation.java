@@ -9,13 +9,6 @@ public class UserInformation implements Parcelable {
     private String password;
     private String user_id;
 
-
-    public UserInformation(String username, String email, String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-    }
-
     public UserInformation(String user_id, String username, String email, String password) {
         this.user_id = user_id;
         this.username = username;

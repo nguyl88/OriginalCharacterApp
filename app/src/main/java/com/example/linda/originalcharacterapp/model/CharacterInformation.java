@@ -1,11 +1,12 @@
 package com.example.linda.originalcharacterapp.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import com.google.firebase.database.Exclude;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class CharacterInformation implements Parcelable {
+public class CharacterInformation {
     private String user_id;
     private String photo_id;
     private String characterName;
@@ -15,21 +16,21 @@ public class CharacterInformation implements Parcelable {
     private String characterPowers;
     private String characterBio;
     private String characterFamily;
+    private String character_id;
     private List<Likes> likes;
+    private HashMap<String, CharacterInformation> characterMap;
 
-    private String characterImage;
 
     public CharacterInformation()  {
 
     }
 
 
-    public CharacterInformation(String user_id,String characterImage, String characterName, String characterAge,
-                                String characterPowers,String characterSpecies, String characterPersonality, String characterFamily,
+    public CharacterInformation(String user_id,String character_id, String photo_id, String characterName, String characterAge,
+                               String characterSpecies, String characterPersonality, String characterFamily,String characterPowers,
                                 String characterBio) {
         this.user_id = user_id;
-        this.photo_id = photo_id;
-
+        this.photo_id = photo_id; //character image
         this.characterName = characterName;
         this.characterAge = characterAge;
         this.characterSpecies = characterSpecies;
@@ -37,7 +38,7 @@ public class CharacterInformation implements Parcelable {
         this.characterPowers = characterPowers;
         this.characterFamily = characterFamily;
         this.characterBio = characterBio;
-        this.characterImage = characterImage;
+        this.character_id = character_id;
     }
 
     public String getUser_id() {
@@ -120,72 +121,40 @@ public class CharacterInformation implements Parcelable {
         this.characterBio = characterBio;
     }
 
-    public String getCharacterImage() {
-        return characterImage;
+    public String getCharacter_id() {
+        return character_id;
     }
 
-    public void setCharacterImage(String characterImage) {
-        this.characterImage = characterImage;
-    }
-    protected CharacterInformation(Parcel in) {
-        user_id = in.readString();
-        photo_id= in.readString();
-        characterImage= in.readString();
-        characterName = in.readString();
-        characterAge = in.readString();
-        characterSpecies = in.readString();
-        characterPersonality= in.readString();
-        characterPowers= in.readString();
-        characterBio = in.readString();
-    }
-    public static final Creator<CharacterInformation> CREATOR = new Creator<CharacterInformation>() {
-        @Override
-        public CharacterInformation createFromParcel(Parcel in) {
-            return new CharacterInformation(in);
-        }
-
-        @Override
-        public CharacterInformation[] newArray(int size) {
-            return new CharacterInformation[size];
-        }
-    };
-    public static Creator<CharacterInformation> getCREATOR() {
-        return CREATOR;
-    }
-    @Override
-    public int describeContents() {
-        return 0;
+    public void setCharacter_id(String character_id) {
+        this.character_id = character_id;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(user_id);
-        dest.writeString(photo_id);
-        dest.writeString(characterImage);
-        dest.writeString(characterName);
-        dest.writeString(characterAge);
-        dest.writeString(characterSpecies);
-        dest.writeString(characterPersonality);
-        dest.writeString(characterFamily);
-        dest.writeString(characterPowers);
-        dest.writeString(characterBio);
-
+    public HashMap<String, CharacterInformation> getCharacterMap() {
+        return characterMap;
     }
 
-    @Override
-    public String toString() {
-        return "CharacterInformation{" +
-                "user_id='" + user_id + '\'' +
-                ", photo_id='" + photo_id + '\'' +
-                ", characterName='" + characterName + '\'' +
-                ", characterAge='" + characterAge + '\'' +
-                ", characterSpecies='" + characterSpecies + '\'' +
-                ", characterPersonality='" + characterPersonality + '\'' +
-                ", characterPowers='" + characterPowers + '\'' +
-                ", characterBio='" + characterBio + '\'' +
-                ", characterFamily='" + characterFamily + '\'' +
-                ", likes=" + likes +
-                ", characterImage='" + characterImage + '\'' +
-                '}';
+    public void setCharacterMap(HashMap<String, CharacterInformation> characterMap) {
+
+        this.characterMap = characterMap;
     }
+
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("user_id", user_id);
+        result.put("photo_id", photo_id);
+        result.put("character_id", character_id);
+        result.put("characterName", characterName);
+        result.put("characterAge", characterAge);
+        result.put("Species", characterSpecies);
+        result.put("Personality", characterPersonality);
+        result.put("Family", characterFamily);
+        result.put("Powers", characterPowers);
+        result.put("Biography", characterBio);
+
+
+        return result;
+    }
+
 }

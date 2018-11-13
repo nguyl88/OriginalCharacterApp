@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation= "vertical"
+    android:showDividers="middle"
+    >
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="?android:attr/listDivider"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/blog_image"
+            android:layout_width="300dp"
+            android:layout_height="250dp"
+            android:layout_marginBottom="32dp"
+            android:layout_weight="1"
+
+            android:background="@color/colorPrimaryDark"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_create_black_24dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/editOCButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/colorAccent"
+                android:scaleType="centerInside"
+                app:srcCompat="@android:drawable/ic_menu_edit" />
+
+            <ImageButton
+                android:id="@+id/shareOCButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#eb06b2"
+                android:scaleType="centerInside"
+                app:srcCompat="@android:drawable/ic_menu_share" />
+
+            <ImageButton
+                android:id="@+id/deleteOCButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="false"
+                android:background="@android:color/holo_blue_dark"
+                android:scaleType="centerInside"
+                app:srcCompat="@android:drawable/ic_menu_delete" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/character_desc"
+                android:layout_width="50dp"
+                android:layout_height="20dp"
+                android:text="Name:" />
+
+            <TextView
+                android:id="@+id/ocAge"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:text="Age:" />
+
+
+            <TextView
+                android:id="@+id/ocSpeciesName"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:text="Species:" />
+
+            <TextView
+                android:id="@+id/ocPersonalityType"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:text="Personality:" />
+
+            <TextView
+                android:id="@+id/ocFamilyTree"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:text="Family:" />
+
+            <TextView
+                android:id="@+id/ocPowersA"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:text="Powers:" />
+
+            <TextView
+                android:id="@+id/ocBiography"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:text="Biography:" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/displayName"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/displayAge"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="TextView" />
+            <TextView
+                android:id="@+id/displaySpecies"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="TextView"
+                />
+
+
+            <TextView
+                android:id="@+id/displayPersonality"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="TextView" />
+            <TextView
+                android:id="@+id/displayFamily"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="TextView"
+               />
+
+            <TextView
+                android:id="@+id/displayPowers"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/displayBio"
+                android:layout_width="match_parent"
+                android:layout_height="131dp"
+                android:text="TextView" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
