@@ -30,16 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
-   /* private Integer[] testImages = new Integer[]{
-            R.drawable.search, R.mipmap.ghostfinder101avatar,
-            R.mipmap.ghostfinderchibis, R.drawable.setting,
-            R.drawable.setting, R.drawable.setting,
-            R.drawable.setting, R.drawable.search,
-            R.drawable.logout, R.drawable.logout,
-            R.drawable.setting, R.drawable.logout,
-            R.drawable.logout, R.drawable.search,
 
-    };*/
     private List<CharacterInformation> userOCs;
     private TextView currentUsername;
     private RecyclerView mRecyclerView;
@@ -103,6 +94,8 @@ public class HomeFragment extends Fragment {
 }
         public void retrieveUserOCsByChild() {
         String user_id = user.getUid();
+        System.out.println("Revoke the character reference ");
+            reference = FirebaseDatabase.getInstance().getReference("User Account");
             reference.child(user_id).child("character").addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
@@ -157,21 +150,21 @@ public class HomeFragment extends Fragment {
         }
 
         public void retrieveUserOCs() {
-
-            DatabaseReference characterReference = reference.child(user.getUid()).child("character");
+            System.out.println("Revoke the character reference ");
+            reference = FirebaseDatabase.getInstance().getReference("User Account");
             // final Query query = characterReference;
-            reference.child(user.getUid()).orderByChild("character").addValueEventListener(new ValueEventListener() {
+            reference.child(user.getUid()).child("character").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     ////Loop 1 to go through all the child nodes of characters
                     for(DataSnapshot characterSnapshot : dataSnapshot.getChildren()){
-                            if (dataSnapshot.exists ()) {
+                            if (dataSnapshot.getValue() != null ) {
                                 CharacterInformation oc = characterSnapshot.getValue (CharacterInformation.class);
                                 String ocKey = characterSnapshot.getKey ();
                                 System.out.println ("Adding ocs: " + ocKey + " Name: " + oc.getCharacterName ());
                                 Log.d ("TAGGING OCS", ocKey + " / " + oc.getCharacterName ());
                                 userOCs.add (oc);
-                                Toast.makeText (getActivity (), "Adding images " + oc.getCharacterName (), Toast.LENGTH_SHORT).show ();
+                                Toast.makeText (getContext(), "Adding images " + oc.getCharacterName (), Toast.LENGTH_SHORT).show ();
                             } else { //if user haven't added any characters
                                 break;
                             }
@@ -192,25 +185,6 @@ public class HomeFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
-
-    public static class viewGalleryHolder extends RecyclerView.ViewHolder {
-        View itemView;
-        public viewGalleryHolder(View itemView) {
-            super(itemView);
-            itemView = itemView;
-        }
-
-        public void setTitle(String title) {
-            TextView postTitle = (TextView) itemView.findViewById (R.id.characterName);
-            postTitle.setText(title);
-        }
-
-        public void setCharacterInfo() {
-
-        }
-
-    }
-
 
 }
 

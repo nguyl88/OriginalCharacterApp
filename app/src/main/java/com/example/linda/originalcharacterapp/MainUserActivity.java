@@ -28,6 +28,7 @@ public class MainUserActivity extends AppCompatActivity implements DisplayCharac
 
                 case R.id.navigation_dashboard:
                     val = true;
+                    fragment = new SearchActivity();
                     loadFragment(fragment);
                     break;
                 case R.id.create_character:
