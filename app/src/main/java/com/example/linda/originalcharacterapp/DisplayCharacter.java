@@ -16,15 +16,6 @@ import android.widget.TextView;
 
 import com.example.linda.originalcharacterapp.model.CharacterInformation;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link DisplayCharacter.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link DisplayCharacter#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class DisplayCharacter extends Fragment {
 
     private Context context;

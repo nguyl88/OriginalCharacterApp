@@ -30,7 +30,7 @@
                 android:layout_height="150dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                tools:background="#6dfd65">
+                android:background="#009de1">
 
             </ImageView>
 
@@ -49,7 +49,7 @@
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:label="Name"
-                android:text="Name"
+                android:hint="Name"
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 tools:hint="Name" />
@@ -61,7 +61,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="Age"
+                android:hint="Age"
                 android:textColor="@color/black"
                 android:textSize="12sp" />
 
@@ -72,7 +72,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="Species"
+                android:hint="Species"
                 android:textColor="@color/black"
                 android:textSize="12sp" />
 
@@ -83,7 +83,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="Personality"
+                android:hint="Personality"
                 android:textColor="@color/black"
                 android:textSize="12sp" />
             <EditText
@@ -93,7 +93,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="Family"
+                android:hint="Family"
                 android:textColor="@color/black"
                 android:textSize="12sp" />
 
@@ -104,7 +104,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:inputType="text|textMultiLine"
-                android:text="Powers/Abilities"
+                android:hint="Powers/Abilities"
                 android:gravity="top"
                 android:textColor="@color/black"
                 android:textSize="12sp" />
@@ -115,7 +115,7 @@
                 android:layout_height="170dp"
                 android:layout_weight="1"
                 android:ems="10"
-                android:text="Background Story"
+                android:hint="Background Story"
                 android:inputType="text|textMultiLine"
                 android:gravity="top"
                 android:textColor="@color/black"

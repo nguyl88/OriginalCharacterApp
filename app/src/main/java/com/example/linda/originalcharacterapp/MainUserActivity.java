@@ -63,7 +63,6 @@ public class MainUserActivity extends AppCompatActivity implements DisplayCharac
         }
 
         private void loadFragment(Fragment fragment) {
-
             // load fragment
             FragmentTransaction transaction = getSupportFragmentManager ().beginTransaction ();
             transaction.replace (R.id.fragment_container, fragment);
@@ -81,7 +80,4 @@ public class MainUserActivity extends AppCompatActivity implements DisplayCharac
     public void onFragmentInteraction(Uri uri){
 
     }
-
-
-
 }

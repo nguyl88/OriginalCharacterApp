@@ -8,7 +8,7 @@
     android:background= "@mipmap/bluescreen"
     android:fitsSystemWindows="true"
     android:baselineAligned="false"
-    tools:context=".HomeActivity">
+    >
     <ScrollView
         android:id="@+id/scrollview"
         android:layout_width="wrap_content"
@@ -28,7 +28,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/gallery_title"
+                    android:id="@+id/otheruser_title"
                     android:layout_width="wrap_content"
                     android:layout_height="64dp"
                     android:layout_weight="1"
@@ -40,10 +40,10 @@
             </LinearLayout>
 
             <GridView
-                android:id="@+id/user_grid_view"
-                android:layout_weight="1"
+                android:id="@+id/otheruser_grid_view"
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
+                android:layout_height="552dp"
+                android:layout_weight="1"
                 android:columnWidth="90dp"
                 android:gravity="center"
                 android:horizontalSpacing="10dp"
@@ -58,30 +58,6 @@
                 android:layout_height="70dp"
                 android:gravity="bottom"
                 android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/settingsButton"
-                    android:layout_width="50dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/setting" />
-
-                <ImageButton
-                    android:id="@+id/searchButton"
-                    android:layout_width="50dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/search" />
-
-                <ImageButton
-                    android:id="@+id/faveButton"
-                    android:layout_width="50dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/staricon" />
 
             </LinearLayout>
 

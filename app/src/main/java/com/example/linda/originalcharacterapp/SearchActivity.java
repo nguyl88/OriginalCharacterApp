@@ -4,33 +4,54 @@ package com.example.linda.originalcharacterapp;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ListFragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+
+import com.example.linda.originalcharacterapp.model.UserInformation;
+import com.example.linda.originalcharacterapp.utils.SearchRecyclerView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearchActivity extends ListFragment implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
 
-    List<String> mAllValues;
-    private ArrayAdapter<String> mAdapter;
+    List<UserInformation> allUsers;
+ //  private ArrayAdapter<String> mAdapter; //replace with recycler view adapter to pull all user ocs from the database
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
     private Context mContext;
 
+    private DatabaseReference allReference;
+    private FirebaseDatabase firebaseDatabase;
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         mContext = getActivity();
+        mRecyclerView = (RecyclerView) getView().findViewById (R.id.searchuserprofile);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager (this.getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setNestedScrollingEnabled(true);
         setHasOptionsMenu(true);
-        populateList();
+        searchUsers();
 
     }
 
@@ -81,23 +102,28 @@ public class SearchActivity extends ListFragment implements SearchView.OnQueryTe
             resetSearch();
             return false;
         }
-
-        List<String> filteredValues = new ArrayList<String>(mAllValues);
-        for (String value : mAllValues) {
-            if (!value.toLowerCase().contains(newText.toLowerCase())) {
-                filteredValues.remove(value);
+        List<UserInformation> filteredValues = new ArrayList<UserInformation>(allUsers);
+        for (UserInformation user :allUsers) {
+            String sUsername = user.getUsername();
+            if (!user.getUsername().toLowerCase().contains(newText.toLowerCase())) {
+                filteredValues.remove(user);
             }
         }
+        mAdapter = new SearchRecyclerView (filteredValues, mContext);
+        System.out.println("Filtering adapter...");
+        mRecyclerView.setAdapter(mAdapter);
 
-        mAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, filteredValues);
-        setListAdapter(mAdapter);
+     //   mAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, filteredValues);
+     //   setListAdapter(mAdapter);
 
         return false;
     }
 
     public void resetSearch() {
-        mAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, mAllValues);
-        setListAdapter(mAdapter);
+        mAdapter = new SearchRecyclerView (allUsers,mContext);
+        System.out.println("REsetting adapter...");
+        mRecyclerView.setAdapter(mAdapter);
+        //setListAdapter(mAdapter);
     }
 
     @Override
@@ -114,38 +140,35 @@ public class SearchActivity extends ListFragment implements SearchView.OnQueryTe
         void OnItem1SelectedListener(String item);
     }
 
-    private void populateList() {
+    private void searchUsers() {
+        allReference = FirebaseDatabase.getInstance().getReference("User Account");
+        allUsers = new ArrayList<> ();
 
-        mAllValues = new ArrayList<> ();
+        allReference.addValueEventListener (new ValueEventListener () {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //Loop 1: Goes through all the users
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren ()) {
+                        String userKey = userSnapshot.getKey ();
+                        UserInformation data = userSnapshot.child("users").getValue (UserInformation.class);
+                        System.out.println("Data is added to users " + data.getUsername());
+                        System.out.println("User key information is : " + userKey);
+                        allUsers.add (data);
+                    }
 
-        mAllValues.add ("Afghanistan");
-        mAllValues.add ("Åland Islands");
-        mAllValues.add ("Albania");
-        mAllValues.add ("Algeria");
-        mAllValues.add ("American Samoa");
-        mAllValues.add ("AndorrA");
-        mAllValues.add ("Angola");
-        mAllValues.add ("Anguilla");
-        mAllValues.add ("Antarctica");
-        mAllValues.add ("Antigua and Barbuda");
-        mAllValues.add ("Argentina");
-        mAllValues.add ("Armenia");
-        mAllValues.add ("Aruba");
-        mAllValues.add ("Australia");
-        mAllValues.add ("Austria");
-        mAllValues.add ("Azerbaijan");
-        mAllValues.add ("Bahamas");
-        mAllValues.add ("Bahrain");
-        mAllValues.add ("Bangladesh");
-        mAllValues.add ("Barbados");
-        mAllValues.add ("Belarus");
-        mAllValues.add ("Belgium");
-        mAllValues.add ("Belize");
-        mAllValues.add ("Benin");
-        mAllValues.add ("Bermuda");
-        mAllValues.add ("Bhutan");
+                    allUsers.add(new UserInformation("ertry","Linda","Linda2018@gmail.com", "password"));
+                mAdapter = new SearchRecyclerView (allUsers,mContext);
+                    System.out.println("Setting adapter...");
+                mRecyclerView.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged ();
+            }
 
-        mAdapter = new ArrayAdapter<> (mContext, android.R.layout.simple_list_item_1, mAllValues);
-        setListAdapter (mAdapter);
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        //setListAdapter (mAdapter);
      }
     }
