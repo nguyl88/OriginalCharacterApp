@@ -1,5 +1,6 @@
 package com.example.linda.originalcharacterapp;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -185,6 +186,18 @@ public class HomeFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        if(currentUser == null) {
+                startActivity(new Intent (getActivity(), Login.class));
+
+        }
+    }
+
 
 }
 

@@ -71,8 +71,6 @@ public class SearchRecyclerView extends RecyclerView.Adapter<SearchRecyclerView.
             public void onClick(View v) {
                AppCompatActivity activity = (AppCompatActivity) v.getContext ();
                OtherProfileActivity otherUser = new OtherProfileActivity ();
-               // Intent intent = new Intent (context, OtherProfileActivity.class);
-              //  context.startActivity(intent);
                 activity.getSupportFragmentManager ().beginTransaction ().replace (R.id.fragment_container, otherUser).addToBackStack (null).commit ();
             }
         });
