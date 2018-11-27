@@ -11,12 +11,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.linda.originalcharacterapp.model.UserInformation;
+
 public class OtherProfileActivity extends Fragment {
 
     private TextView otherUser;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
+    private static final String USER_INFO = "USERINFO";
     private RecyclerView.LayoutManager mLayoutManager;
+
+    public static final OtherProfileActivity newInstance(UserInformation user) {
+        OtherProfileActivity fragment = new OtherProfileActivity ();
+        System.out.println("trasferring user SUCCESS " + user.getUser_id () );
+        Bundle args = new Bundle ();
+        args.putParcelable (USER_INFO ,user);
+        fragment.setArguments (args);
+        return fragment;
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

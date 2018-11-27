@@ -6,18 +6,18 @@ This is my app that is going to be based on Original Character development such 
 -INTERFACES - Users will have the ability to create an account and login to start creating their own characters into the database.
 -DATA STRUCTURE - Firebase Realtime Database
 The database will include the user's list of characters that he/she create and the likes that will act as a bookmark.
--NETWORKING - Possibly REST API / Twitter API (still waiting for confirmation)
+-NETWORKING - Firebase Realtime Database/REST API -> https://occreations-b6c14.firebaseapp.com/
 
-There will be no API/Comments in this project.
+My website is linked to that information You will only see the details of my projects.
 
 # --- My Plan: --- #
 I will develop an app that is going to help other artists/author to keep information about their fictional characters based on their profile/biography. It will be similar to charahub.com, animo, and instagram. It will allow users to create their characters and submit them into the network for other users to see.
 
 # Use Case Diagram #
-[Imgur](https://i.imgur.com/q9XdRU8.png)
+[Use case diagram](https://i.imgur.com/q9XdRU8.png)
 
 # Model Diagram #
-[Imgur](https://i.imgur.com/XQzZxaE.png)
+[Imgur](https://i.imgur.com/5ALqgYT.png)
 
 # Firebase Datbase Table #
 [Imgur](https://i.imgur.com/Aiixyut.png)

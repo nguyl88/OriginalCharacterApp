@@ -14,16 +14,6 @@ import android.widget.ImageView;
 
 
 public class LikesFragment extends Fragment {
-    // references to the temporary images.
-  /*  private Integer[] testImages = new Integer[]{
-            R.mipmap.crow, R.mipmap.hengfather,
-            R.mipmap.futurecity, R.mipmap.rosalina,
-            R.mipmap.yin, R.mipmap.zero,
-            R.mipmap.crow, R.mipmap.hengfather,
-            R.mipmap.blacksnow, R.mipmap.rosalina,
-            R.mipmap.yin, R.mipmap.zero,
-
-    };*/
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;

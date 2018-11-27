@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background= "@mipmap/createscreen"
     android:id= "@+id/fragment_viewoc"
@@ -31,195 +32,108 @@
 
             </ImageView>
 
-            <TextView
-                android:id="@+id/characterName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:label="Name"
-                android:text="Name"
-                android:textColor="@color/black"
-                android:textSize="12sp"
-                tools:hint="Name" />
-
             <EditText
                 android:id="@+id/editCharName"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
+                android:hint="Name"
                 android:inputType="textPersonName"
                 android:label="Name"
-                android:text="Name"
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 tools:hint="Name" />
 
-            <TextView
-                android:id="@+id/characterAge"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="Age"
-                android:textColor="@color/black"
-                android:textSize="12sp" />
 
             <EditText
                 android:id="@+id/editAge"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:inputType="textPersonName"
+                android:hint="Age"
                 android:label="Age"
-                android:text="Age"
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 tools:hint="Name" />
 
-            <TextView
-                android:id="@+id/characterSpecies"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="Species"
-                android:textColor="@color/black"
-                android:textSize="12sp" />
-
             <EditText
                 android:id="@+id/editSpecies"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
+                android:hint="Species"
                 android:inputType="textPersonName"
-                android:text="Species"
                 android:textColor="@color/black"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/characterPersonality"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="Personality"
-                android:textColor="@color/black"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+              />
 
             <EditText
                 android:id="@+id/editPersonality"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
+                android:hint="Personality"
                 android:inputType="textPersonName"
-                android:text="Personality"
                 android:textColor="@color/black"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                 />
 
-            <TextView
-                android:id="@+id/characterFamily"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="Family"
-                android:textColor="@color/black"
-                android:textSize="12sp" />
             <EditText
                 android:id="@+id/editFamily"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
+                android:hint="Family"
                 android:inputType="textPersonName"
-                android:text="Family"
                 android:textColor="@color/black"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/characterPowers"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:ems="10"
-                android:gravity="top"
-                android:inputType="text|textMultiLine"
-                android:text="Powers/Abilities"
-                android:textColor="@color/black"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+              />
 
             <EditText
                 android:id="@+id/editPowers"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:ems="10"
                 android:gravity="top"
+                android:hint="Powers/Abilities"
                 android:inputType="text|textMultiLine"
-                android:text="Powers/Abilities"
                 android:textColor="@color/black"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/characterBios"
-                android:layout_width="match_parent"
-                android:layout_height="170dp"
-                android:layout_weight="1"
-                android:ems="10"
-                android:gravity="top"
-                android:inputType="text|textMultiLine"
-                android:text="Background Story"
-                android:textColor="@color/black"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                 />
             <EditText
                 android:id="@+id/editBios"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="170dp"
                 android:layout_weight="1"
                 android:ems="10"
                 android:gravity="top"
+                android:hint="Background Story"
                 android:inputType="text|textMultiLine"
-                android:text="Background Story"
                 android:textColor="@color/black"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="371dp"
                 android:layout_height="wrap_content">
 
-                <Switch
-                    android:id="@+id/editMode"
-                    android:layout_width="match_parent"
+
+                <ImageButton
+                    android:id="@+id/editButton"
+                    android:layout_width="156dp"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
                     android:layout_weight="1"
-                    android:text="Switch" />
-
-                <Button
-                    android:id="@+id/delete_character_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Delete Character" />
-
-
-            </LinearLayout>
+                    android:background="@android:color/holo_purple"
+                    android:src="@android:drawable/ic_menu_edit" />
+            </RelativeLayout>
 
 
         </LinearLayout>

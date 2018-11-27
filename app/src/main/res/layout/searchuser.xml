@@ -11,7 +11,7 @@
         android:id="@+id/userimage"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        app:srcCompat="@mipmap/ghostfinder101avatar" />
+        app:srcCompat="@drawable/defaulticon" />
 
     <LinearLayout
         android:layout_width="match_parent"

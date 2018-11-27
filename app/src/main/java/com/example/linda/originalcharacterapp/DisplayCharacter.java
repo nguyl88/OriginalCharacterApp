@@ -7,44 +7,59 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Switch;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.linda.originalcharacterapp.model.CharacterInformation;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 public class DisplayCharacter extends Fragment {
 
     private Context context;
-    private TextView cName, cAge, cSpecies,cPersonality,cFamily,cBiography,cPowers;
-   // private EditText editName, editAge, editSpecies,editPersonality,editFamily,editBio,editPowers;
+    private EditText cName, cAge, cSpecies,cPersonality,cFamily,cBiography,cPowers;
     private ImageView currentImage;
     private CharacterInformation oc;
-    private String nameValue, ageValue, speciesValue, familyValue, personalityValue, powerValue, bioValue;
-    private Switch editSwitch;
+    private ImageButton editButton;
+    private String displayTag = "DISPLAY_TAG";
+    private static final String CHARACTER_INFO = "CharacterInformation";
+    private FirebaseDatabase database;
+    private DatabaseReference reference;
+    private FirebaseUser firebaseUser;
 
     private OnFragmentInteractionListener mListener;
-
     public DisplayCharacter() {
-    }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     */
-    public static DisplayCharacter newInstance(ImageView image) {
+    }
+    public static final DisplayCharacter newInstance(CharacterInformation character) {
         DisplayCharacter fragment = new DisplayCharacter ();
+        System.out.println("trasferring character SUCCESS " + character.getCharacter_id () );
         Bundle args = new Bundle ();
-      //  args.putString (ARG_PARAM1, param1);
-    //    args.putString (ARG_PARAM2, param2);
+        args.putParcelable (CHARACTER_INFO, character);
         fragment.setArguments (args);
+
         return fragment;
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //Bundle bundle = this.getArguments();
+        if (getArguments() != null){
+            oc = getArguments ().getParcelable (CHARACTER_INFO);
+            System.out.println("The bundle is not null and character name: " + oc.getCharacterName());
+        }
+
+        if (savedInstanceState != null) {
+            System.out.println("saved instance state isn't a null");
+        }
+        else {
+            System.out.println ("Display Character has an exception");
+        }
         return inflater.inflate (R.layout.fragment_display_character, container, false);
 
     }
@@ -52,55 +67,54 @@ public class DisplayCharacter extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated (savedInstanceState);
 
-        editSwitch = (Switch) getView().findViewById (R.id.editMode);
-        Boolean isChecked = editSwitch.isChecked(); //true
+            context = getActivity ();
+            firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            database = FirebaseDatabase.getInstance ();
+            reference = FirebaseDatabase.getInstance ().getReference ("User Account");
 
-        editSwitch.setOnCheckedChangeListener (new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                editCharacter();
-            }
-        });
+            currentImage = (ImageView) getView ().findViewById (R.id.currentDisplayCharacter);
+            Picasso.get ().load (oc.getPhoto_id ()).placeholder (R.mipmap.ic_launcher).into (currentImage);
 
-        Button deleteCharacterButton = (Button) getView().findViewById (R.id.delete_character_button);
-        currentImage = (ImageView) getView().findViewById (R.id.currentDisplayCharacter);
+            cName = getView ().findViewById (R.id.editCharName);
+            cName.setText (oc.getCharacterName ());
 
-        cName = getView().findViewById (R.id.characterName);
-        cName.setVisibility(View.VISIBLE);
-       // nameValue = cName.getText().toString();
+            System.out.println(oc.getCharacterName () + " does exist");
+            cName.setVisibility (View.VISIBLE);
 
-        cAge = getView().findViewById (R.id.characterAge);
-        cAge.setVisibility(View.VISIBLE);
-       // ageValue = cAge.getText().toString();
+            cAge = getView ().findViewById (R.id.editAge);
+            cAge.setText(oc.getCharacterAge ());
+            cAge.setVisibility (View.VISIBLE);
 
-        cSpecies = getView().findViewById (R.id.characterSpecies);
-        cSpecies.setVisibility(View.VISIBLE);
-        //speciesValue = cSpecies.getText().toString();
+            cSpecies = getView ().findViewById (R.id.editSpecies);
+            cSpecies.setText(oc.getCharacterSpecies());
+            cSpecies.setVisibility (View.VISIBLE);
 
-        cPersonality = getView().findViewById (R.id.characterPersonality);
-        cPersonality.setVisibility(View.VISIBLE);
-        //personalityValue = cPersonality.getText().toString();
+            cPersonality = getView ().findViewById (R.id.editPersonality);
+            cPersonality.setText(oc.getCharacterPersonality());
+            cPersonality.setVisibility (View.VISIBLE);
 
-        cFamily =  getView().findViewById (R.id.characterFamily);
-        cFamily.setVisibility(View.VISIBLE);
-      //  familyValue = cFamily.getText().toString();
+            cFamily = getView ().findViewById (R.id.editFamily);
+            cFamily.setText(oc.getCharacterFamily());
+            cFamily.setVisibility (View.VISIBLE);
 
-        cPowers =  getView().findViewById (R.id.characterPowers);
-        cPowers.setVisibility(View.VISIBLE);
-      //  powerValue = cPowers.getText().toString();
 
-        cBiography = getView().findViewById (R.id.characterBios);
-        cBiography.setVisibility(View.VISIBLE);
-       // bioValue = cBiography.getText().toString();
+            cPowers = getView ().findViewById (R.id.editPowers);
+            cPowers.setText(oc.getCharacterPowers());
+            cPowers.setVisibility (View.VISIBLE);
 
-        deleteCharacterButton.setOnClickListener(new View.OnClickListener () {
-            @Override
-            public void onClick(View view) {
-                deleteCharacter();
-            }
-        });
+            cBiography = getView ().findViewById (R.id.editBios);
+            cBiography.setText(oc.getCharacterBio());
+            cBiography.setVisibility (View.VISIBLE);
+
+            editButton = getView().findViewById(R.id.editButton);
+            editButton.setOnClickListener (new View.OnClickListener () {
+                @Override
+                public void onClick(View v) {
+                    editOC(editButton, v, oc.getCharacter_id (), oc.getUser_id ());
+                }
+            });
+
     }
-
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction (uri);
@@ -127,83 +141,43 @@ public class DisplayCharacter extends Fragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
-
-    public void deleteCharacter() {
-
+    public interface OnCharacterSelectedListener {
+            public void onCharacterSelected(int position);
     }
 
-    public void editCharacter() {
-        if(editSwitch.isChecked()) {
-            //User changes character's info and save and overwrite the character's info in the database.
-            cName.setVisibility(View.GONE);
-            cName = (EditText) getView().findViewById(R.id.editCharName);
-            cName.setVisibility(View.VISIBLE);
-            cName.setText(cName.getText());
+  public void editOC(final ImageButton editButton, View view, String characterid, String userid) {
+        String currentUserId = userid;
+        String nameValue, ageValue, speciesValue, familyValue, personalityValue, powerValue, bioValue;
+         // Query query = characterRef.child (currentUserId).child ("character").child(characterid);
+        nameValue = cName.getText().toString();
+        ageValue = cAge.getText().toString();
+        speciesValue = cSpecies.getText().toString();
+        familyValue = cFamily.getText().toString();
+        personalityValue = cPersonality.getText().toString();
+        powerValue = cPowers.getText().toString();
+        bioValue = cBiography.getText().toString();
 
-            cAge.setVisibility(View.GONE);
-            cAge = (EditText) getView().findViewById(R.id.editAge);
-            cAge.setVisibility(View.VISIBLE);
-            cAge.setText(cAge.getText());
+                          //Set the view
+                          cName.setText(nameValue);
+                          cAge.setText(ageValue);
+                          cSpecies.setText(speciesValue);
+                          cFamily.setText(familyValue);
+                          cPersonality.setText(personalityValue);
+                          cPowers.setText(powerValue);
+                          cBiography.setText(bioValue);
+                          //Update database reference
 
-            cSpecies.setVisibility(View.GONE);
-            cSpecies = (EditText) getView().findViewById(R.id.editSpecies);
-            cSpecies.setVisibility(View.VISIBLE);
-            cSpecies.setText(cSpecies.getText());
+      reference.child(currentUserId).child("character").child(characterid).child("characterName").setValue(nameValue);
+      reference.child(currentUserId).child("character").child(characterid).child("characterAge").setValue(ageValue);
+      reference.child(currentUserId).child("character").child(characterid).child("characterSpecies").setValue(speciesValue);
+      reference.child(currentUserId).child("character").child(characterid).child("characterPersonality").setValue(personalityValue);
+      reference.child(currentUserId).child("character").child(characterid).child("characterPowers").setValue(powerValue);
+      reference.child(currentUserId).child("character").child(characterid).child("characterFamily").setValue(familyValue);
+      reference.child(currentUserId).child("character").child(characterid).child("characterBio").setValue(bioValue);
 
-            cFamily.setVisibility(View.GONE);
-            cFamily = (EditText) getView().findViewById(R.id.editFamily);
-            cFamily.setVisibility(View.VISIBLE);
-            cFamily.setText(cFamily.getText());
+      System.out.println("Character ID: " + characterid + " is saved ");
+      Toast.makeText(context, "Character updated", Toast.LENGTH_SHORT).show();
 
-            cPersonality.setVisibility(View.GONE);
-            cPersonality = (EditText) getView().findViewById(R.id.editPersonality);
-            cPersonality.setVisibility(View.VISIBLE);
-            cPersonality.setText(cPersonality.getText());
+      }
 
-            cPowers.setVisibility(View.GONE);
-            cPowers = (EditText) getView().findViewById(R.id.editPowers);
-            cPowers.setVisibility(View.VISIBLE);
-            cPowers.setText(cPowers.getText());
-
-            cBiography.setVisibility(View.GONE);
-            cBiography = (EditText) getView().findViewById(R.id.editBios);
-            cBiography.setVisibility(View.VISIBLE);
-            cBiography.setText(cBiography.getText());
-
-            //            //then update the text into the database
-
-        } else if (!editSwitch.isChecked()) {
-            //It does not need to show the updated text in TextView
-            // But it will be updated once the text is in the data and display the updated text
-            cName.setVisibility(View.INVISIBLE);
-            cName = (TextView) getView().findViewById(R.id.characterName);
-            cName.setVisibility(View.VISIBLE);
-
-            cAge.setVisibility(View.GONE);
-            cAge.setText(cAge.getText());
-            cAge = (TextView) getView().findViewById(R.id.characterAge);
-            cAge.setVisibility(View.VISIBLE);
-
-            cSpecies.setVisibility(View.GONE);
-            cSpecies.setText(cSpecies.getText());
-            cSpecies = (TextView) getView().findViewById(R.id.characterSpecies);
-            cSpecies.setVisibility(View.VISIBLE);
-
-            cFamily.setVisibility(View.GONE);
-            cFamily = (TextView) getView().findViewById(R.id.characterFamily);
-            cFamily.setVisibility(View.VISIBLE);
-
-            cPersonality.setVisibility(View.GONE);
-            cPersonality = (TextView) getView().findViewById(R.id.characterPersonality);
-            cPersonality.setVisibility(View.VISIBLE);
-
-            cPowers.setVisibility(View.GONE);
-            cPowers = (TextView) getView().findViewById(R.id.characterPowers);
-            cPowers.setVisibility(View.VISIBLE);
-
-            cBiography.setVisibility(View.GONE);
-            cBiography = (TextView) getView().findViewById(R.id.characterBios);
-            cBiography.setVisibility(View.VISIBLE);
-        }
-    }
 }

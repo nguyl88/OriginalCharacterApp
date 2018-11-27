@@ -1,12 +1,15 @@
 package com.example.linda.originalcharacterapp.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.database.Exclude;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CharacterInformation {
+public class CharacterInformation implements Parcelable {
     private String user_id;
     private String photo_id;
     private String characterName;
@@ -155,6 +158,55 @@ public class CharacterInformation {
 
 
         return result;
+    }
+
+    protected CharacterInformation(Parcel in) {
+        user_id = in.readString ();
+        photo_id = in.readString ();
+        characterName = in.readString ();
+        characterAge = in.readString ();
+        characterSpecies = in.readString ();
+        characterPersonality = in.readString ();
+        characterPowers = in.readString ();
+        characterBio = in.readString ();
+        character_id = in.readString ();
+    }
+
+    public static final Creator<CharacterInformation> CREATOR = new Creator<CharacterInformation> () {
+        @Override
+        public CharacterInformation createFromParcel(Parcel in) {
+            return new CharacterInformation (in);
+        }
+
+        @Override
+        public CharacterInformation[] newArray(int size) {
+            return new CharacterInformation[size];
+        }
+    };
+
+
+    public static Creator<CharacterInformation> getCREATOR() {
+        return CREATOR;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString (user_id);
+        dest.writeString (photo_id);
+        dest.writeString (characterName);
+        dest.writeString (characterAge);
+        dest.writeString (characterSpecies);
+        dest.writeString (characterPersonality);
+        dest.writeString (characterFamily);
+        dest.writeString (characterPowers);
+        dest.writeString (characterBio);
+        dest.writeString (character_id);
+
     }
 
 }

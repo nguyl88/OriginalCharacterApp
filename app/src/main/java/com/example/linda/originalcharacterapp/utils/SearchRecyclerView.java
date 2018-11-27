@@ -1,6 +1,7 @@
 package com.example.linda.originalcharacterapp.utils;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -58,7 +59,7 @@ public class SearchRecyclerView extends RecyclerView.Adapter<SearchRecyclerView.
     @Override
     public void onBindViewHolder(SearchRecyclerView.ViewHolder holder, int position) {
 
-        UserInformation user = mDataset.get(position);
+        final UserInformation user = mDataset.get(position);
         holder.username.setText(user.getUsername());
         holder.email.setText(user.getEmail());
 
@@ -70,8 +71,10 @@ public class SearchRecyclerView extends RecyclerView.Adapter<SearchRecyclerView.
             @Override
             public void onClick(View v) {
                AppCompatActivity activity = (AppCompatActivity) v.getContext ();
-               OtherProfileActivity otherUser = new OtherProfileActivity ();
-                activity.getSupportFragmentManager ().beginTransaction ().replace (R.id.fragment_container, otherUser).addToBackStack (null).commit ();
+                Bundle bundle = new Bundle();
+               OtherProfileActivity otherUser = OtherProfileActivity.newInstance(user);
+                System.out.println("User instantiated " + user.getUser_id ());
+                activity.getSupportFragmentManager ().beginTransaction ().replace (R.id.fragment_container, otherUser).commit ();
             }
         });
 

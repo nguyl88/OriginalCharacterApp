@@ -30,10 +30,13 @@
             <TextView
                 android:id="@+id/current_username"
                 android:layout_width="match_parent"
-                android:layout_height="29dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:text="@string/current_user"
-                android:textColor="@android:color/holo_red_dark" />
+                android:textColor="#7300ff"
+                android:textSize="30sp"
+                app:fontFamily="cursive" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/imagegallery"
