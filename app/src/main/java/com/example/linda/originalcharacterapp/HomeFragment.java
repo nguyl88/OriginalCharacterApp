@@ -67,7 +67,7 @@ public class HomeFragment extends Fragment {
         firebaseDatabase = FirebaseDatabase.getInstance();
 
         currentUsername = getView().findViewById(R.id.current_username);
-        mRecyclerView = (RecyclerView) getView().findViewById (R.id.imagegallery);
+        mRecyclerView = (RecyclerView) getView().findViewById (R.id.imagegallery); //recycler view)
         reference = FirebaseDatabase.getInstance().getReference("User Account");
 
         String userid=user.getUid();

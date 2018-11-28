@@ -39,10 +39,17 @@
                     app:fontFamily="cursive" />
             </LinearLayout>
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_other_user"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </android.support.v7.widget.RecyclerView>
+
             <GridView
                 android:id="@+id/otheruser_grid_view"
                 android:layout_width="match_parent"
-                android:layout_height="552dp"
+                android:layout_height="500dp"
                 android:layout_weight="1"
                 android:columnWidth="90dp"
                 android:gravity="center"

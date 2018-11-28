@@ -75,6 +75,8 @@ public class SearchRecyclerView extends RecyclerView.Adapter<SearchRecyclerView.
                OtherProfileActivity otherUser = OtherProfileActivity.newInstance(user);
                 System.out.println("User instantiated " + user.getUser_id ());
                 activity.getSupportFragmentManager ().beginTransaction ().replace (R.id.fragment_container, otherUser).commit ();
+
+                System.out.println("Search user button is pressed");
             }
         });
 

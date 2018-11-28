@@ -1,8 +1,12 @@
 package com.example.linda.originalcharacterapp;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -10,6 +14,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,16 +30,21 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
-//This will open the register format for the user to enter the information
+import java.io.IOException;
+
+
 public class Register extends AppCompatActivity implements View.OnClickListener {
-    //  SQLiteOpenHelper openHelper;
-    //  SQLiteDatabase db;
 
     private EditText txtUsername, txtEmail, txtPassword;
     private UserHelper databaseHelper;
     private static final String TAG = "Register";
+    private static int RESULT_LOAD_IMAGE = 1;
     private TextView existAccount;
+    private ImageView userImage;
+    private Uri selectedImage = null;
 
     //Firebase
     private ProgressBar progressBar;
@@ -43,6 +53,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabase;
     private FirebaseUser firebaseUser;
+    private StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +64,15 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         firebaseUser = firebaseAuth.getInstance().getCurrentUser ();
         mDatabase = FirebaseDatabase.getInstance ().getReference ().child ("User Account");
 
+        storageReference = FirebaseStorage.getInstance().getReference();
+
         txtUsername = (EditText) findViewById (R.id.txt_username);
         txtEmail = (EditText) findViewById (R.id.txt_email);
         txtPassword = (EditText) findViewById (R.id.txt_password);
         databaseHelper = new UserHelper (this);
         existAccount = findViewById (R.id.existing_account);
         progressBar = findViewById (R.id.progress_register);
+        userImage = findViewById(R.id.setUserImage);
 
         Button createButton = (Button) findViewById (R.id.create_account);
         Button goBackButton = (Button) findViewById (R.id.tologin);
@@ -67,6 +81,25 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         String newPassword = txtPassword.getText ().toString ().trim ();
         String newUsername = txtUsername.getText ().toString ().trim ();
 
+        userImage.setOnClickListener(this);
+
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult (requestCode, resultCode, data);
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
+            selectedImage = data.getData ();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getApplicationContext().getContentResolver(),
+                        selectedImage);
+                userImage.setImageBitmap(bitmap);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            userImage.setImageURI (selectedImage);  //set the imageview in the box
+        }
 
     }
 
@@ -120,6 +153,12 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             return;
         }
 
+        if(selectedImage == null) {
+            System.out.println("User need image");
+            return;
+        }
+
+
         progressBar.setVisibility (View.VISIBLE);
 
         firebaseAuth.createUserWithEmailAndPassword (newEmail, newPassword).addOnCompleteListener (new OnCompleteListener<AuthResult> () {
@@ -165,6 +204,18 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         Intent intent = new Intent (Register.this, MainUserActivity.class);
         startActivity (intent);
     }
+
+
+    private void chooseImage() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        //  Intent intent = new Intent();
+        galleryIntent.setType("image/*");
+        //     galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult (galleryIntent,RESULT_LOAD_IMAGE);
+
+        //  startActivityForResult(Intent.createChooser(galleryIntent, "Select Picture"), RESULT_LOAD_IMAGE);
+    }
+
 
     private boolean notEmpty() {
         if (txtEmail.length () != 0 && txtPassword.length () != 0 && txtUsername.length () != 0)

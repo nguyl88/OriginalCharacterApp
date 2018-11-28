@@ -31,6 +31,12 @@
     <!-- Registration progress -->
 
 
+    <ImageView
+        android:id="@+id/setUserImage"
+        android:layout_width="234dp"
+        android:layout_height="135dp"
+        app:srcCompat="@drawable/defaulticon" />
+
     <EditText
         android:id="@+id/txt_username"
         android:layout_width="match_parent"
