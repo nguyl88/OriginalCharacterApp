@@ -63,12 +63,14 @@
 
     <Button
         android:id="@+id/create_account"
+        style="@android:style/Widget.DeviceDefault.Light.Button.Inset"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Create Account" />
 
     <Button
         android:id="@+id/tologin"
+        style="@android:style/Widget.DeviceDefault.Light.Button.Inset"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Go Back" />

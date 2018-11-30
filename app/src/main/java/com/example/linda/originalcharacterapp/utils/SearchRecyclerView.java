@@ -15,6 +15,7 @@ import com.example.linda.originalcharacterapp.R;
 import com.example.linda.originalcharacterapp.model.UserInformation;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -63,7 +64,7 @@ public class SearchRecyclerView extends RecyclerView.Adapter<SearchRecyclerView.
         holder.username.setText(user.getUsername());
         holder.email.setText(user.getEmail());
 
-      //  Picasso.get ().load (user.getPhoto_id ()).placeholder (R.mipmap.ic_launcher).into (holder.image);
+       Picasso.get ().load (user.getUser_photo_id ()).placeholder (R.mipmap.ic_launcher).into (holder.userimage);
 
         //When user presses the other username, it takes to the other user's profile which will contain the user's gallery
         holder.username.setOnClickListener (new View.OnClickListener () {
@@ -79,6 +80,8 @@ public class SearchRecyclerView extends RecyclerView.Adapter<SearchRecyclerView.
                 System.out.println("Search user button is pressed");
             }
         });
+
+
 
     }
 

@@ -22,6 +22,8 @@ import android.widget.Toast;
 import com.example.linda.originalcharacterapp.data.UserHelper;
 import com.example.linda.originalcharacterapp.model.UserInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,9 +33,12 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.util.UUID;
 
 
 public class Register extends AppCompatActivity implements View.OnClickListener {
@@ -45,13 +50,14 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     private TextView existAccount;
     private ImageView userImage;
     private Uri selectedImage = null;
+    private Uri downloadImage;
 
     //Firebase
     private ProgressBar progressBar;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mDatabase;
+    private DatabaseReference databaseReference;
     private FirebaseUser firebaseUser;
     private StorageReference storageReference;
 
@@ -61,10 +67,9 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         setContentView (R.layout.register_layout);
         // Initialize Firebase Auth
         firebaseAuth = FirebaseAuth.getInstance ();
-        firebaseUser = firebaseAuth.getInstance().getCurrentUser ();
-        mDatabase = FirebaseDatabase.getInstance ().getReference ().child ("User Account");
-
-        storageReference = FirebaseStorage.getInstance().getReference();
+        firebaseUser = firebaseAuth.getInstance ().getCurrentUser ();
+        databaseReference = FirebaseDatabase.getInstance ().getReference ().child ("User Account");
+        storageReference = FirebaseStorage.getInstance ().getReference ();
 
         txtUsername = (EditText) findViewById (R.id.txt_username);
         txtEmail = (EditText) findViewById (R.id.txt_email);
@@ -72,7 +77,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         databaseHelper = new UserHelper (this);
         existAccount = findViewById (R.id.existing_account);
         progressBar = findViewById (R.id.progress_register);
-        userImage = findViewById(R.id.setUserImage);
+        userImage = findViewById (R.id.setUserImage);
 
         Button createButton = (Button) findViewById (R.id.create_account);
         Button goBackButton = (Button) findViewById (R.id.tologin);
@@ -81,22 +86,21 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         String newPassword = txtPassword.getText ().toString ().trim ();
         String newUsername = txtUsername.getText ().toString ().trim ();
 
-        userImage.setOnClickListener(this);
+        userImage.setOnClickListener (this);
 
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult (requestCode, resultCode, data);
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
             selectedImage = data.getData ();
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getApplicationContext().getContentResolver(),
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap (this.getApplicationContext ().getContentResolver (),
                         selectedImage);
-                userImage.setImageBitmap(bitmap);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
+                userImage.setImageBitmap (bitmap);
+            } catch (IOException e) {
+                e.printStackTrace ();
             }
             userImage.setImageURI (selectedImage);  //set the imageview in the box
         }
@@ -112,6 +116,9 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 String newPassword = txtPassword.getText ().toString ().trim ();
                 String newUsername = txtUsername.getText ().toString ().trim ();
                 registerUser (newEmail, newPassword, newUsername);
+                break;
+            case R.id.setUserImage:
+                chooseImage();
                 break;
 
             case R.id.existing_account:
@@ -153,8 +160,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             return;
         }
 
-        if(selectedImage == null) {
-            System.out.println("User need image");
+        if (selectedImage == null) {
+            System.out.println ("User need image");
             return;
         }
 
@@ -165,14 +172,18 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 progressBar.setVisibility (View.GONE);
+
                 if (task.isSuccessful ()) {
+                    //   setUserInfo(newUsername);
                     String userid = firebaseAuth.getCurrentUser ().getUid (); //Get user id
-                    UserInformation userNew = new UserInformation(userid, newUsername, newEmail, newPassword);
-                    DatabaseReference current_user_ref = mDatabase.child (userid);
-                    current_user_ref.child("users").setValue(userNew);
-                 //   setUserInfo(newUsername);
+                    UserInformation newUser = new UserInformation(userid, newUsername, newEmail, newPassword);
+                    DatabaseReference current_user_ref = databaseReference.child (userid);
+                          current_user_ref.child("users").setValue(newUser);
+                   // uploadUserPhoto ();
+                  //  System.out.println("User photo successfully uploaded!");
+
                     finish ();
-                    startActivity (new Intent (Register.this, MainUserActivity.class));
+                    startActivity (new Intent (Register.this, UserImageSetUp.class));
                 } else {
 
                     if (task.getException () instanceof FirebaseAuthUserCollisionException) {
@@ -186,35 +197,74 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             }
         });
 
+
     }
+
     private void setUserInfo(String newUsername) {
-      UserProfileChangeRequest  profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(newUsername).build();
-        firebaseUser.updateProfile(profileUpdates)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder ().setDisplayName (newUsername).build ();
+        firebaseUser.updateProfile (profileUpdates)
+                .addOnCompleteListener (new OnCompleteListener<Void> () {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "User profile updated.");
+                        if (task.isSuccessful ()) {
+                            Log.d (TAG, "User profile updated.");
                         }
                     }
                 });
 
     }
+
     private void openAccount() {
         Intent intent = new Intent (Register.this, MainUserActivity.class);
         startActivity (intent);
     }
 
-
     private void chooseImage() {
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        //  Intent intent = new Intent();
-        galleryIntent.setType("image/*");
-        //     galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult (galleryIntent,RESULT_LOAD_IMAGE);
-
-        //  startActivityForResult(Intent.createChooser(galleryIntent, "Select Picture"), RESULT_LOAD_IMAGE);
+        Intent galleryIntent = new Intent (Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        galleryIntent.setType ("image/*");
+        startActivityForResult (galleryIntent, RESULT_LOAD_IMAGE);
     }
+
+    private void uploadUserPhoto() {
+
+        storageReference = storageReference.child ("userimage").child (firebaseAuth.getUid ()+ "/" + UUID.randomUUID ().toString () + ".png");
+        storageReference.putFile (selectedImage)
+
+                .addOnSuccessListener (new OnSuccessListener<UploadTask.TaskSnapshot> () {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        downloadImage = taskSnapshot.getUploadSessionUri ();
+
+                        // String downloadPhoto = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
+                        storageReference.getDownloadUrl ().addOnSuccessListener (new OnSuccessListener<Uri> () {
+                            @Override
+                            public void onSuccess(Uri downloadPhotoUrl) {
+                                String photoReference = downloadPhotoUrl.toString();
+                                databaseReference.child(firebaseAuth.getUid()).child("users").setValue(photoReference);
+                                System.out.println("User information added to the database!");
+                                System.out.println("Download photo success " + photoReference);
+                            }
+                        });
+
+                    }
+                })
+                .addOnFailureListener (new OnFailureListener () {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println ("User image failed");
+                    }
+                })
+                .addOnProgressListener (new OnProgressListener<UploadTask.TaskSnapshot> () {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred () / taskSnapshot
+                                .getTotalByteCount ());
+                    }
+                });
+
+    }
+
+
 
 
     private boolean notEmpty() {
@@ -236,11 +286,12 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         } else toastMessage ("New user did not insert. ");
     }
 
+
     private void toastMessage(String message) {
         Toast.makeText (this, message, Toast.LENGTH_SHORT).show ();
     }
 
-    @Override
+  /*  @Override
     public void onStart() {
         super.onStart ();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser ();
@@ -256,5 +307,5 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         if (mAuthListener != null) {
             firebaseAuth.removeAuthStateListener (mAuthListener);
         }
-    }
+    }*/
 }

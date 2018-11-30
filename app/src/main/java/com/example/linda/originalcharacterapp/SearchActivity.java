@@ -158,7 +158,6 @@ public class SearchActivity extends ListFragment implements SearchView.OnQueryTe
                         allUsers.add (data);
                     }
 
-                    allUsers.add(new UserInformation("ertry","Linda","Linda2018@gmail.com", "password"));
                 mAdapter = new SearchRecyclerView (allUsers,mContext);
                     System.out.println("Setting adapter...");
                 mRecyclerView.setAdapter(mAdapter);

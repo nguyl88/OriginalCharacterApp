@@ -1,5 +1,6 @@
 package com.example.linda.originalcharacterapp;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,8 +11,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class MainUserActivity extends AppCompatActivity implements DisplayCharacter.OnFragmentInteractionListener {
     private Fragment fragment;
+    private FirebaseAuth firebaseAuth;
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -57,6 +63,8 @@ public class MainUserActivity extends AppCompatActivity implements DisplayCharac
             super.onCreate (savedInstanceState);
             setContentView (R.layout.activity_main_user);
 
+            firebaseAuth = FirebaseAuth.getInstance();
+
             BottomNavigationView navigation = (BottomNavigationView) findViewById (R.id.navigation);
             navigation.setOnNavigationItemSelectedListener (mOnNavigationItemSelectedListener);
             loadFragment (new HomeFragment ()); //will load the default activity which is the user's gallery
@@ -79,5 +87,16 @@ public class MainUserActivity extends AppCompatActivity implements DisplayCharac
     @Override
     public void onFragmentInteraction(Uri uri){
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        if(currentUser == null) {
+            startActivity(new Intent (this, Login.class));
+
+        }
     }
 }

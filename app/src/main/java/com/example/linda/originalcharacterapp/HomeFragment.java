@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,7 @@ public class HomeFragment extends Fragment {
     private final String TAG = "User";
 
     private ImageView imageSelection;
+    private ImageView userProfile;
 
     public static HomeFragment newInstance() {
     HomeFragment f = new HomeFragment ();
@@ -66,6 +68,7 @@ public class HomeFragment extends Fragment {
         reference = FirebaseDatabase.getInstance().getReference();
         firebaseDatabase = FirebaseDatabase.getInstance();
 
+        userProfile = getView().findViewById (R.id.user_profile_image);
         currentUsername = getView().findViewById(R.id.current_username);
         mRecyclerView = (RecyclerView) getView().findViewById (R.id.imagegallery); //recycler view)
         reference = FirebaseDatabase.getInstance().getReference("User Account");
@@ -77,7 +80,9 @@ public class HomeFragment extends Fragment {
                 if (user != null) {
                     //  Display username
                     String currentUser= dataSnapshot.child("users").child("username").getValue().toString();
+                    String currentImage = dataSnapshot.child("users").child("user_photo_id").getValue().toString();
                     currentUsername.setText(currentUser);
+                    Picasso.get ().load (currentImage).placeholder (R.mipmap.ic_launcher).into (userProfile);
                 }
             }
 

@@ -1,17 +1,23 @@
 package com.example.linda.originalcharacterapp.utils;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +35,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
+public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder>{
     final private List<CharacterInformation> mDataset;
 
     private FirebaseDatabase firebaseDatabase;
@@ -38,6 +44,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     private FirebaseStorage firebaseStorage;
     private FirebaseAuth firebaseAuth;
     private Context context;
+    private ShareActionProvider shareActionProvider;
     OnCharacterItemClickListener characterItemClick;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -75,13 +82,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             deleteButton = view.findViewById(R.id.deleteOCButton);
             shareButton = view.findViewById(R.id.shareOCButton);
 
-            shareButton.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    return false;
-                }
-            });
-
         }
 
         public void changeTextView(View view) {
@@ -104,8 +104,8 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         }
 
         @Override
-        public RecycleViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                         int viewType) {
+        public RecycleViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_single, parent, false);
             ViewHolder vh = new ViewHolder(view);
             return vh;
@@ -113,6 +113,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
         @Override
         public void onBindViewHolder(ViewHolder holder, final int position) {
+
            final CharacterInformation oc = mDataset.get(position);
 
                 this.characterItemClick = characterItemClick;
@@ -125,7 +126,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 holder.cPowers.setText (oc.getCharacterPowers ());
                 holder.cFamily.setText (oc.getCharacterFamily ());
                 holder.cBio.setText (oc.getCharacterBio ());
-
+               Context viewImage = holder.image.getContext();
                 holder.deleteButton.setOnClickListener (new View.OnClickListener () {
                     @Override
                     public void onClick(View v) {
@@ -141,18 +142,24 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                    AppCompatActivity activity = (AppCompatActivity) view.getContext ();
                     Bundle bundle = new Bundle();
                     DisplayCharacter ocFragment = DisplayCharacter.newInstance(oc);
-                   // bundle.putParcelable (oc.getCharacter_id(), oc);
-                 //   ocFragment.setArguments (bundle);
                     System.out.println("Character instantiated " + oc.getCharacter_id ());
                     activity.getSupportFragmentManager ().beginTransaction ().replace (R.id.fragment_container, ocFragment).commit ();
 
                 }
             });
 
-                System.out.println ("Binding images...");
-                Toast.makeText (context, "Binding images " + oc.getCharacterName (), Toast.LENGTH_SHORT).show ();
+            holder.shareButton.setOnClickListener (new View.OnClickListener () {
+                @Override
+                public void onClick(View v) {
+
+                    shareMessage(v, oc.getPhoto_id (), oc);
+
+                }
+            });
+                System.out.println ("Binding images..." + oc.getCharacter_id ());
 
         }
+
     public interface OnCharacterItemClickListener{
         void onCharacterClick(int position, CharacterInformation oc);
     }
@@ -162,7 +169,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         }
 
         public void deleteOC(String characterid,String userid, final int position) {
-          //  firebaseAuth = FirebaseAuth.getInstance();
             String currentUserID = userid;
             FirebaseDatabase.getInstance().getReference("User Account").child(currentUserID).child("character").child(characterid).removeValue()
                     .addOnCompleteListener(new OnCompleteListener<Void> () {
@@ -170,7 +176,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 //remove item from list alos and refresh recyclerview
-                             //   mDataset.remove(position);
+                                //   mDataset.remove(position);
                                 notifyItemRemoved(position);
                                 notifyItemRangeChanged(position, mDataset.size());
 
@@ -189,5 +195,28 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
          }
 
+    public boolean onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.share_menu, menu);
+        // Locate MenuItem with ShareActionProvider
+        MenuItem item = menu.findItem(R.id.share);
+        // Fetch and store ShareActionProvider
+        shareActionProvider = (ShareActionProvider) item.getActionProvider();
+        return true;
+    }
+
+
+    public void shareMessage(View view, String photo_id, CharacterInformation oc) {
+       // Uri uri = Uri.fromFile(imagePath);
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.setType("image/*");
+        String shareBodyText = "Hello! I created a character from the CSE248 PROJECT: OC - CENTRAL APP. \n" +oc.getCharacterName() +
+                "\n" + oc.getCharacterAge() +"\n" + oc.getCharacterSpecies() + "\n" + oc.getCharacterPersonality() +
+                "\n" + oc.getCharacterFamily() + "\n" + oc.getCharacterPowers() + "\n" + oc.getCharacterBio();
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject/Title");
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(photo_id));
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText);
+        context.startActivity(Intent.createChooser(sharingIntent, "Share via"));
+    }
 
     }
