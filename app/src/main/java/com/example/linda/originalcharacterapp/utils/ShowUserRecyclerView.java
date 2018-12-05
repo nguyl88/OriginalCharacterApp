@@ -2,10 +2,12 @@ package com.example.linda.originalcharacterapp.utils;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,10 +17,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import static android.support.constraint.Constraints.TAG;
 
 public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerView.ShowViewHolder>{
 
@@ -30,17 +35,22 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
     private FirebaseStorage firebaseStorage;
     private FirebaseAuth firebaseAuth;
     private Context context;
+    private LikeHeart heart;
+    private GestureDetector gestureDetector;
+
+
 
     public static class ShowViewHolder extends RecyclerView.ViewHolder {
         private ImageView image;
         private TextView cName, cAge, cSpecies, cPersonality, cPowers, cFamily, cBio, currentUser;
         private TextView titleName, titleAge, titleSpecies,titlePersonality, titlePowers, titleFamily, titleBio;
-        private ImageButton likeButton;
+        private ImageView likeButton, redLikeButton;
         private View divideLines;
         private Context context;
         private DatabaseReference characterRef;
         private FirebaseUser firebaseUser;
-
+        private LikeHeart heart;
+        private GestureDetector gestureDetector;
 
         private ShowViewHolder(View view) {
             super(view);
@@ -62,12 +72,15 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
             cPowers = (TextView) view.findViewById(R.id.user_displayPowers);
             cFamily = (TextView) view.findViewById(R.id.user_displayFamily);
             cBio = (TextView) view.findViewById(R.id.user_displayBio);
-            likeButton= view.findViewById(R.id.likeButton);
+            likeButton= view.findViewById(R.id.likesButton);
+            redLikeButton = view.findViewById(R.id.redLikeButton);
+
+            redLikeButton.setVisibility (View.GONE);
+            likeButton.setVisibility(View.VISIBLE);
 
         }
 
     } //end of viewholder
-
 
     public ShowUserRecyclerView(List<CharacterInformation> myDataset, Context context) {
         mDataset = myDataset;
@@ -86,6 +99,10 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
     public void onBindViewHolder(ShowUserRecyclerView.ShowViewHolder holder, final int position) {
 
         final CharacterInformation oc = mDataset.get(position);
+        heart = new LikeHeart (holder.likeButton, holder.redLikeButton);
+
+        gestureDetector = new GestureDetector(context, new GestureListener ());
+
         System.out.println("Adding other user character" + oc.getCharacterName());
         Picasso.get ().load (oc.getPhoto_id ()).placeholder (R.mipmap.ic_launcher).into (holder.image);
         holder.cName.setText (oc.getCharacterName ());
@@ -96,16 +113,47 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
         holder.cFamily.setText (oc.getCharacterFamily ());
         holder.cBio.setText (oc.getCharacterBio ());
 
-        holder.likeButton.setOnClickListener (new View.OnClickListener () {
-            @Override
-            public void onClick(View v) {
-                System.out.println("Like button is pressed");
-
-            }
-        });
+        likePost(holder); //display buttons
 
         System.out.println ("Binding images..." + oc.getCharacter_id ());
     }
+
+    public class GestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User Accounts");
+            Query query = reference.child(firebaseUser.getUid()).
+                    orderByChild(image.getCharacterId()).equalTo(image.getUserId());
+
+
+            heart.toggleLike ();
+            return true;
+        }
+    }
+
+    private void likePost(ShowUserRecyclerView.ShowViewHolder holder) {
+        holder.likeButton.setOnTouchListener (new View.OnTouchListener () {
+            @Override
+            public boolean onTouch(View v, MotionEvent motionEvent) {
+                Log.d(TAG, "White heart is touched.");
+                return gestureDetector.onTouchEvent(motionEvent);
+            }
+
+        });
+
+        holder.redLikeButton.setOnTouchListener (new View.OnTouchListener () {
+            @Override
+            public boolean onTouch(View v, MotionEvent motionEvent) {
+                Log.d(TAG, "Red heart is touched.");
+                return  gestureDetector.onTouchEvent(motionEvent);
+            }
+            });
+        }
 
     @Override
     public int getItemCount() {

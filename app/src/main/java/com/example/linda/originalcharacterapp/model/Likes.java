@@ -5,6 +5,9 @@ public class Likes {
     private int character_id;
     private boolean likes;
 
+    public Likes() {
+
+    }
     public Likes(int character_id, int likes_id) {
         this.likes = false;
         this.likes_id = likes_id;

@@ -32,15 +32,22 @@
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_create_black_24dp" />
 
-        <ImageButton
-            android:id="@+id/likeButton"
-            style="@android:style/Widget.Holo.Light.ImageButton"
+        <ImageView
+            android:id="@+id/likesButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:adjustViewBounds="false"
-            android:background="@android:color/holo_blue_bright"
-            app:srcCompat="@android:drawable/star_big_off" />
+            android:visibility="visible"
+            app:srcCompat="@drawable/vector_white_heart" />
+        <ImageView
+            android:id="@+id/redLikeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="false"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/vector_heart_red" />
 
     </LinearLayout>
 

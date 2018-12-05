@@ -65,7 +65,9 @@ public class UserImageSetUp extends AppCompatActivity  {
         uploadImageButton.setOnClickListener( new View.OnClickListener () {
             @Override
             public void onClick(View view) {
-                uploadProfileImage();
+                if (userImage != null) {
+                    uploadProfileImage ();
+                }
                 }
         }
         );

@@ -29,8 +29,8 @@ public class CharacterInformation implements Parcelable {
     }
 
 
-    public CharacterInformation(String user_id,String character_id, String photo_id, String characterName, String characterAge,
-                               String characterSpecies, String characterPersonality, String characterFamily,String characterPowers,
+      public CharacterInformation(String user_id,String character_id, String photo_id, String characterName, String characterAge,
+                                String characterSpecies, String characterPersonality, String characterFamily,String characterPowers,
                                 String characterBio) {
         this.user_id = user_id;
         this.photo_id = photo_id; //character image
@@ -43,6 +43,23 @@ public class CharacterInformation implements Parcelable {
         this.characterBio = characterBio;
         this.character_id = character_id;
     }
+    public CharacterInformation(String user_id,String character_id, String photo_id, String characterName, String characterAge,
+                                String characterSpecies, String characterPersonality, String characterFamily,String characterPowers,
+                                String characterBio, List<Likes> likes) {
+        this.user_id = user_id;
+        this.photo_id = photo_id; //character image
+        this.characterName = characterName;
+        this.characterAge = characterAge;
+        this.characterSpecies = characterSpecies;
+        this.characterPersonality = characterPersonality;
+        this.characterPowers = characterPowers;
+        this.characterFamily = characterFamily;
+        this.characterBio = characterBio;
+        this.character_id = character_id;
+        this.likes = likes;
+    }
+
+
 
     public String getUser_id() {
         return user_id;
