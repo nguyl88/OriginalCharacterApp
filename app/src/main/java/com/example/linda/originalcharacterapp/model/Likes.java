@@ -2,16 +2,16 @@ package com.example.linda.originalcharacterapp.model;
 
 public class Likes {
     private int likes_id;
-    private int character_id;
+    private String user_id;
     private boolean likes;
 
     public Likes() {
 
     }
-    public Likes(int character_id, int likes_id) {
+    public Likes(String user_id, int likes_id) {
         this.likes = false;
         this.likes_id = likes_id;
-        this.character_id = character_id;
+        this.user_id = user_id;
 
     }
 
@@ -23,12 +23,12 @@ public class Likes {
         this.likes_id = likes_id;
     }
 
-    public int getCharacter_id() {
-        return character_id;
+    public String getUser_id() {
+        return user_id;
     }
 
-    public void setCharacter_id(int character_id) {
-        this.character_id = character_id;
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 
     public boolean isLikes() {

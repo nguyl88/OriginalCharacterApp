@@ -1,6 +1,7 @@
 package com.example.linda.originalcharacterapp.utils;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -13,11 +14,16 @@ import android.widget.TextView;
 
 import com.example.linda.originalcharacterapp.R;
 import com.example.linda.originalcharacterapp.model.CharacterInformation;
+import com.example.linda.originalcharacterapp.model.Likes;
+import com.example.linda.originalcharacterapp.model.UserInformation;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 
@@ -37,13 +43,18 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
     private Context context;
     private LikeHeart heart;
     private GestureDetector gestureDetector;
-
+    private Boolean likedByCurrentUser = false;
+    private StringBuilder listOfUserLikes;
+    private UserInformation currentUser;
+    private String showUserLikes;
+    private CharacterInformation currentOC;
 
 
     public static class ShowViewHolder extends RecyclerView.ViewHolder {
         private ImageView image;
         private TextView cName, cAge, cSpecies, cPersonality, cPowers, cFamily, cBio, currentUser;
         private TextView titleName, titleAge, titleSpecies,titlePersonality, titlePowers, titleFamily, titleBio;
+        private TextView likedUsersList;
         private ImageView likeButton, redLikeButton;
         private View divideLines;
         private Context context;
@@ -51,6 +62,7 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
         private FirebaseUser firebaseUser;
         private LikeHeart heart;
         private GestureDetector gestureDetector;
+
 
         private ShowViewHolder(View view) {
             super(view);
@@ -75,9 +87,7 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
             likeButton= view.findViewById(R.id.likesButton);
             redLikeButton = view.findViewById(R.id.redLikeButton);
 
-            redLikeButton.setVisibility (View.GONE);
-            likeButton.setVisibility(View.VISIBLE);
-
+            likedUsersList = view.findViewById (R.id.userlikes);
         }
 
     } //end of viewholder
@@ -95,11 +105,13 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
         return vh;
     }
 
+
     @Override
     public void onBindViewHolder(ShowUserRecyclerView.ShowViewHolder holder, final int position) {
 
         final CharacterInformation oc = mDataset.get(position);
         heart = new LikeHeart (holder.likeButton, holder.redLikeButton);
+        currentOC =  mDataset.get(position);
 
         gestureDetector = new GestureDetector(context, new GestureListener ());
 
@@ -113,52 +125,187 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
         holder.cFamily.setText (oc.getCharacterFamily ());
         holder.cBio.setText (oc.getCharacterBio ());
 
-        likePost(holder); //display buttons
+        likesPost(holder); //display buttons
 
         System.out.println ("Binding images..." + oc.getCharacter_id ());
     }
 
-    public class GestureListener extends GestureDetector.SimpleOnGestureListener {
-        @Override
-        public boolean onDown(MotionEvent e) {
-            return true;
-        }
 
-        @Override
-        public boolean onDoubleTap(MotionEvent e) {
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User Accounts");
-            Query query = reference.child(firebaseUser.getUid()).
-                    orderByChild(image.getCharacterId()).equalTo(image.getUserId());
+  class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
+        private ImageView image;
+        private CharacterInformation oc;
+        private ShowUserRecyclerView.ShowViewHolder holder;
 
-            heart.toggleLike ();
-            return true;
-        }
-    }
+      @Override
+      public boolean onDown(MotionEvent e) {
+          return true;
+      }
 
-    private void likePost(ShowUserRecyclerView.ShowViewHolder holder) {
-        holder.likeButton.setOnTouchListener (new View.OnTouchListener () {
-            @Override
-            public boolean onTouch(View v, MotionEvent motionEvent) {
-                Log.d(TAG, "White heart is touched.");
-                return gestureDetector.onTouchEvent(motionEvent);
-            }
+      @Override
+      public boolean onDoubleTap(MotionEvent e) {
+          getCharacterPhotoLikes(image, holder);
+          heart.toggleLike ();
+          return true;
 
-        });
-
-        holder.redLikeButton.setOnTouchListener (new View.OnTouchListener () {
-            @Override
-            public boolean onTouch(View v, MotionEvent motionEvent) {
-                Log.d(TAG, "Red heart is touched.");
-                return  gestureDetector.onTouchEvent(motionEvent);
-            }
-            });
-        }
+      }
+  }
 
     @Override
     public int getItemCount() {
-        return mDataset.size();
+        return mDataset.size ();
     }
+
+    private void getCharacterPhotoLikes(ImageView image,
+                                        ShowUserRecyclerView.ShowViewHolder holder ){
+        DatabaseReference reference = FirebaseDatabase.getInstance ().getReference ("User Accounts");
+        Query query = reference.child(firebaseUser.getUid()).child("character").
+                orderByChild(currentOC.getCharacter_id ()).equalTo(R.string.likes);
+
+            query.addListenerForSingleValueEvent (new ValueEventListener () {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    for(DataSnapshot singleSnapshot: dataSnapshot.getChildren()) {
+                        //case 1 user liked the photo
+                        //case 2 user did not like the photo
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+    }
+
+    private void getLikeString() {
+        DatabaseReference reference = FirebaseDatabase.getInstance ().getReference ("User Accounts");
+        Query query = reference.child(firebaseUser.getUid()).child("character").
+                orderByChild(currentOC.getCharacter_id ()).equalTo(R.string.likes);
+
+        query.addListenerForSingleValueEvent (new ValueEventListener () {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                listOfUserLikes = new StringBuilder();
+                for(DataSnapshot singleSnapshot: dataSnapshot.getChildren()) {
+                    DatabaseReference reference = FirebaseDatabase.getInstance ().getReference ("User Accounts");
+                    Query query = reference.child(firebaseUser.getUid()).child("user").
+                            orderByChild("user_id").equalTo(singleSnapshot.getValue(Likes.class).getUser_id ());
+
+                    query.addListenerForSingleValueEvent (new ValueEventListener () {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            for(DataSnapshot singleSnapshot: dataSnapshot.getChildren()) {
+                                Log.d(TAG, "Found user by id for likes " + singleSnapshot.getValue(UserInformation.class).getEmail ());
+
+                                listOfUserLikes.append(singleSnapshot.getValue(UserInformation.class).getUsername ());
+                                listOfUserLikes.append(", ");
+
+                                String[] splitUsers = listOfUserLikes.toString().split(",");
+
+                                //User account settings need to be created
+                                if(listOfUserLikes.toString().contains(currentUser.getUsername())) {
+                                    likedByCurrentUser = true;
+                                } else {
+                                    likedByCurrentUser = false;
+                                }
+
+                                int length = splitUsers.length;
+
+                                if(length == 1) {
+
+                                    showUserLikes =  "Liked by " + splitUsers[0];
+
+                                }
+                                else if (length == 2) {
+                                    showUserLikes =  "Liked by " + splitUsers[0] + " and " + splitUsers[1];
+                                }
+                                else if(length == 3) {
+                                    showUserLikes = "Liked by " + splitUsers[0]
+                                            + ", " + splitUsers[1]
+                                            + " and " + splitUsers[2];
+                                }
+
+                                else if(length > 3){
+                                    showUserLikes = "Liked by " + splitUsers[0]
+                                            + ", " + splitUsers[1]
+                                            + ", " + splitUsers[2]
+                                            + " and " + (splitUsers.length - 2) + " others";
+                                }
+
+                                Log.d(TAG, "onDataChange: likes string: " + showUserLikes);
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void likesPost(ShowUserRecyclerView.ShowViewHolder holder) {
+        if(likedByCurrentUser == true) {
+
+            holder.likeButton.setVisibility (View.GONE);
+            holder.redLikeButton.setVisibility(View.VISIBLE);
+            holder.redLikeButton.setOnTouchListener (new View.OnTouchListener () {
+                @Override
+                public boolean onTouch(View v, MotionEvent motionEvent) {
+                    Log.d (TAG, "Red heart is touched.");
+                    return gestureDetector.onTouchEvent (motionEvent);
+                }
+            });
+        }
+        else {
+            holder.redLikeButton.setVisibility (View.GONE);
+            holder.redLikeButton.setVisibility(View.VISIBLE);
+            holder.likeButton.setOnTouchListener (new View.OnTouchListener () {
+                @Override
+                public boolean onTouch(View v, MotionEvent motionEvent) {
+                    Log.d (TAG, "White heart is touched.");
+                    return gestureDetector.onTouchEvent (motionEvent);
+                }
+
+            });
+
+        }
+        }
+    private void getCurrentUser(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User Account");
+        Query query = reference
+                .child(firebaseAuth.getUid ())
+                .orderByChild("user_id")
+                .equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for ( DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
+                    currentUser = singleSnapshot.getValue(UserInformation.class);
+                }
+                getLikeString();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled: query cancelled.");
+            }
+        });
+    }
+
 
 
 }

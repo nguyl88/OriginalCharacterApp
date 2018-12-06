@@ -26,6 +26,10 @@
     <string name="title_settings">Settings</string>
     <string name="title_createocs"> Create Character</string>
     <string name="title_Your_OCs">Your OCs</string>
+    <string name="user_id">user_id</string>
+    <string name="character_id">character_id</string>
+    <string name="likes">likes</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
