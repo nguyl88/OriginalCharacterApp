@@ -25,7 +25,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
-import java.util.UUID;
 
 public class UserImageSetUp extends AppCompatActivity  {
 
@@ -95,7 +94,7 @@ public class UserImageSetUp extends AppCompatActivity  {
 
     }
     private void uploadProfileImage() {
-        storageReference = storageReference.child ("userimage").child (firebaseAuth.getUid ()+ "/" + UUID.randomUUID ().toString () + ".png");
+        storageReference = storageReference.child ("user_image").child (firebaseAuth.getUid () +".png");
         storageReference.putFile (selectedImage)
 
                 .addOnSuccessListener (new OnSuccessListener<UploadTask.TaskSnapshot> () {

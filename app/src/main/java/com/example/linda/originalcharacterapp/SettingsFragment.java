@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.linda.originalcharacterapp.model.CharacterInformation;
 import com.example.linda.originalcharacterapp.utils.WarningFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,8 +24,13 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class SettingsFragment extends Fragment {
     private Button changeEmailButton, logoutButton, deleteAccountButton, changePasswordButton, changeUsernameButton;
@@ -184,7 +190,12 @@ public class SettingsFragment extends Fragment {
         deleteAccountButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageRef = storage.getReference();
+                StorageReference deleteAccountImages = storageRef.child("user_image").child(firebaseUser.getUid() + ".png");
+                deleteAccountImages.delete(); //StorageReference userimage delete
 
+                deleteAllCharacterImages ();
                 reference.child(firebaseUser.getUid ()).removeValue(); //delete value first before deleting the user auth
                 firebaseUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
 
@@ -212,7 +223,39 @@ public class SettingsFragment extends Fragment {
         });
 
     }
+    private void deleteAllCharacterImages() {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        final StorageReference deleteOCImages = storageRef.child("characterimage").child(firebaseUser.getUid());
 
+        reference = FirebaseDatabase.getInstance().getReference("User Account");
+        reference.child(firebaseUser.getUid()).child("character").addValueEventListener(new ValueEventListener () {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot characterSnapshot : dataSnapshot.getChildren()){
+                    if (dataSnapshot.getValue() != null ) {
+                        CharacterInformation oc = characterSnapshot.getValue (CharacterInformation.class);
+                        String ocKey = characterSnapshot.getKey ();
+                        Toast.makeText (getContext(), "Deleting image " + ocKey, Toast.LENGTH_SHORT).show ();
+                        deleteOCImages.child(ocKey + ".png").delete(); //StorageReference userimage delete
+
+                    } else { //if user haven't added any characters
+                        break;
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("Database error");
+            }
+
+        });
+
+
+    }
     // This method is called when the fragment is no longer connected to the Activity
     // Any references saved in onAttach should be nulled out here to prevent memory leaks.
     @Override

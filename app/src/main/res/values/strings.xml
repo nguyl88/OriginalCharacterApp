@@ -29,6 +29,7 @@
     <string name="user_id">user_id</string>
     <string name="character_id">character_id</string>
     <string name="likes">likes</string>
+    <string name="photo_id">photo_id</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

@@ -25,12 +25,15 @@ import com.example.linda.originalcharacterapp.DisplayCharacter;
 import com.example.linda.originalcharacterapp.R;
 import com.example.linda.originalcharacterapp.model.CharacterInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -45,6 +48,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     private FirebaseAuth firebaseAuth;
     private Context context;
     private ShareActionProvider shareActionProvider;
+    FirebaseStorage storage = FirebaseStorage.getInstance();
     OnCharacterItemClickListener characterItemClick;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -168,10 +172,17 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             return mDataset.size();
         }
 
-        public void deleteOC(String characterid,String userid, final int position) {
-            String currentUserID = userid;
-            FirebaseDatabase.getInstance().getReference("User Account").child(currentUserID).child("character").child(characterid).removeValue()
-                    .addOnCompleteListener(new OnCompleteListener<Void> () {
+        public void deleteOC(final String characterid, final String userid, final int position) {
+            final String currentUserID = userid;
+            StorageReference storageRef = storage.getReference();
+            StorageReference toDeleteRef = storageRef.child("characterimage").child(currentUserID ).child(characterid  + ".png");
+
+            toDeleteRef.delete().addOnSuccessListener(new OnSuccessListener<Void> () {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    FirebaseDatabase.getInstance().getReference("User Account")
+                            .child(currentUserID).child("character").
+                            child(characterid).removeValue().addOnCompleteListener(new OnCompleteListener<Void> () {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
@@ -192,6 +203,14 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                             }
                         }
                     });
+                    Log.d("Delete image success", "Character image is deleted");
+                }
+            }).addOnFailureListener(new OnFailureListener () {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Log.d("Delete unsuccess", "Character image couldn't be deleted");
+                }
+            });
 
          }
 

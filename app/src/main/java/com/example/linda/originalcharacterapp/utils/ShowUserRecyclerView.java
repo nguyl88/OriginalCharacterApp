@@ -31,29 +31,30 @@ import java.util.List;
 
 import static android.support.constraint.Constraints.TAG;
 
-public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerView.ShowViewHolder>{
+public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerView.ShowViewHolder> {
 
     final private List<CharacterInformation> mDataset;
 
     private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference characterRef;
+    private DatabaseReference mainRef;
     private FirebaseUser firebaseUser;
     private FirebaseStorage firebaseStorage;
     private FirebaseAuth firebaseAuth;
     private Context context;
     private LikeHeart heart;
     private GestureDetector gestureDetector;
-    private Boolean likedByCurrentUser = false;
+    private Boolean likedByCurrentUser;
     private StringBuilder listOfUserLikes;
     private UserInformation currentUser;
     private String showUserLikes;
     private CharacterInformation currentOC;
+    private ShowUserRecyclerView.ShowViewHolder mainHolder;
 
 
     public static class ShowViewHolder extends RecyclerView.ViewHolder {
         private ImageView image;
         private TextView cName, cAge, cSpecies, cPersonality, cPowers, cFamily, cBio, currentUser;
-        private TextView titleName, titleAge, titleSpecies,titlePersonality, titlePowers, titleFamily, titleBio;
+        private TextView titleName, titleAge, titleSpecies, titlePersonality, titlePowers, titleFamily, titleBio;
         private TextView likedUsersList;
         private ImageView likeButton, redLikeButton;
         private View divideLines;
@@ -65,11 +66,11 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
 
 
         private ShowViewHolder(View view) {
-            super(view);
+            super (view);
 
-            divideLines = view.findViewById(R.id.useroc_divider);
-            image = (ImageView) view.findViewById(R.id.otheruser_image);
-            titleName = (TextView) view.findViewById(R.id.user_ocname);
+            divideLines = view.findViewById (R.id.useroc_divider);
+            image = (ImageView) view.findViewById (R.id.otheruser_image);
+            titleName = (TextView) view.findViewById (R.id.user_ocname);
             titleAge = (TextView) view.findViewById (R.id.user_ocage);
             titleSpecies = (TextView) view.findViewById (R.id.user_ocSpeciesName);
             titlePersonality = (TextView) view.findViewById (R.id.user_ocPersonalityType);
@@ -77,17 +78,18 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
             titleFamily = (TextView) view.findViewById (R.id.user_ocFamilyTree);
             titleBio = (TextView) view.findViewById (R.id.user_ocBiography);
 
-            cName = (TextView) view.findViewById(R.id.user_displayName);
-            cAge = (TextView) view.findViewById(R.id.user_displayAge);
-            cSpecies = (TextView) view.findViewById(R.id.user_displaySpecies);
-            cPersonality = (TextView) view.findViewById(R.id.user_displayPersonality);
-            cPowers = (TextView) view.findViewById(R.id.user_displayPowers);
-            cFamily = (TextView) view.findViewById(R.id.user_displayFamily);
-            cBio = (TextView) view.findViewById(R.id.user_displayBio);
-            likeButton= view.findViewById(R.id.likesButton);
-            redLikeButton = view.findViewById(R.id.redLikeButton);
+            cName = (TextView) view.findViewById (R.id.user_displayName);
+            cAge = (TextView) view.findViewById (R.id.user_displayAge);
+            cSpecies = (TextView) view.findViewById (R.id.user_displaySpecies);
+            cPersonality = (TextView) view.findViewById (R.id.user_displayPersonality);
+            cPowers = (TextView) view.findViewById (R.id.user_displayPowers);
+            cFamily = (TextView) view.findViewById (R.id.user_displayFamily);
+            cBio = (TextView) view.findViewById (R.id.user_displayBio);
+            likeButton = view.findViewById (R.id.likesButton);
+            redLikeButton = view.findViewById (R.id.redLikeButton);
 
             likedUsersList = view.findViewById (R.id.userlikes);
+
         }
 
     } //end of viewholder
@@ -99,8 +101,8 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
 
     @Override
     public ShowUserRecyclerView.ShowViewHolder onCreateViewHolder(ViewGroup parent,
-                                                            int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_otheruser, parent, false);
+                                                                  int viewType) {
+        View view = LayoutInflater.from (parent.getContext ()).inflate (R.layout.recyclerview_otheruser, parent, false);
         ShowUserRecyclerView.ShowViewHolder vh = new ShowUserRecyclerView.ShowViewHolder (view);
         return vh;
     }
@@ -109,13 +111,14 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
     @Override
     public void onBindViewHolder(ShowUserRecyclerView.ShowViewHolder holder, final int position) {
 
-        final CharacterInformation oc = mDataset.get(position);
+        final CharacterInformation oc = mDataset.get (position);
         heart = new LikeHeart (holder.likeButton, holder.redLikeButton);
-        currentOC =  mDataset.get(position);
+        currentOC = mDataset.get (position);
+        mainHolder = holder;
 
-        gestureDetector = new GestureDetector(context, new GestureListener ());
+        gestureDetector = new GestureDetector (context, new GestureListener ());
 
-        System.out.println("Adding other user character" + oc.getCharacterName());
+        System.out.println ("Adding other user character" + oc.getCharacterName ());
         Picasso.get ().load (oc.getPhoto_id ()).placeholder (R.mipmap.ic_launcher).into (holder.image);
         holder.cName.setText (oc.getCharacterName ());
         holder.cAge.setText (oc.getCharacterAge ());
@@ -125,51 +128,68 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
         holder.cFamily.setText (oc.getCharacterFamily ());
         holder.cBio.setText (oc.getCharacterBio ());
 
-        likesPost(holder); //display buttons
+        getLikeString (); //display buttons
 
         System.out.println ("Binding images..." + oc.getCharacter_id ());
     }
 
 
-  class GestureListener extends GestureDetector.SimpleOnGestureListener {
+    class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
         private ImageView image;
         private CharacterInformation oc;
         private ShowUserRecyclerView.ShowViewHolder holder;
 
-      @Override
-      public boolean onDown(MotionEvent e) {
-          return true;
-      }
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
 
-      @Override
-      public boolean onDoubleTap(MotionEvent e) {
-          getCharacterPhotoLikes(image, holder);
-          heart.toggleLike ();
-          return true;
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            //   getCharacterPhotoLikes(image, holder);
+            DatabaseReference reference = FirebaseDatabase.getInstance ().getReference ("User Accounts");
+            Query query = reference.child (currentOC.getUser_id ())
+                    .child ("character")
+                    .child (currentOC.getCharacter_id ())
+                    .child ("likes");
+            //  .orderByChild(currentOC.getCharacter_id ()).equalTo(R.string.likes);
 
-      }
-  }
-
-    @Override
-    public int getItemCount() {
-        return mDataset.size ();
-    }
-
-    private void getCharacterPhotoLikes(ImageView image,
-                                        ShowUserRecyclerView.ShowViewHolder holder ){
-        DatabaseReference reference = FirebaseDatabase.getInstance ().getReference ("User Accounts");
-        Query query = reference.child(firebaseUser.getUid()).child("character").
-                orderByChild(currentOC.getCharacter_id ()).equalTo(R.string.likes);
+            Log.d ("Double tap on the heart", "Likes");
 
             query.addListenerForSingleValueEvent (new ValueEventListener () {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                    for(DataSnapshot singleSnapshot: dataSnapshot.getChildren()) {
-                        //case 1 user liked the photo
-                        //case 2 user did not like the photo
 
+                    for (DataSnapshot singleSnapshot : dataSnapshot.getChildren ()) {
+                        String keyID = singleSnapshot.getKey ();
+                        System.out.println ("Passing through the getCharacterPhotoLikes method");
+                        //case 1 user liked the photo
+                        if (likedByCurrentUser && singleSnapshot.getValue (Likes.class).getUser_id ()
+                                .equals (FirebaseAuth.getInstance ().getCurrentUser ().getUid ())) {
+
+                            //removing the likes when user taps
+                            mainRef.child (currentOC.getUser_id ()).child ("character")
+                                    .child (currentOC.getCharacter_id ())
+                                    .child ("likes")
+                                    .child (keyID).removeValue ();
+
+                            heart.toggleLike ();
+                            getLikeString ();
+
+                        }
+                        //case 2 user did not like the photo
+                        else if (!likedByCurrentUser) {
+                            //add new like when user taps
+                            addNewLikes ();
+                            break;
+
+                        }
+
+                    }
+                    if (!dataSnapshot.exists ()) {
+                        addNewLikes ();
                     }
                 }
 
@@ -178,76 +198,58 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
 
                 }
             });
+            heart.toggleLike ();
+            return true;
+
+        }
     }
 
-    private void getLikeString() {
+    @Override
+    public int getItemCount() {
+        return mDataset.size ();
+    }
+
+    private void getCharacterPhotoLikes() {
+        mainRef = FirebaseDatabase.getInstance ().getReference ("User Accounts");
+
         DatabaseReference reference = FirebaseDatabase.getInstance ().getReference ("User Accounts");
-        Query query = reference.child(firebaseUser.getUid()).child("character").
-                orderByChild(currentOC.getCharacter_id ()).equalTo(R.string.likes);
+        Query query = reference.child (currentOC.getUser_id ())
+                .child ("character").child (currentOC.getCharacter_id ());
+//                                .orderByChild(currentOC.getCharacter_id ()).equalTo(R.string.likes);
 
         query.addListenerForSingleValueEvent (new ValueEventListener () {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                listOfUserLikes = new StringBuilder();
-                for(DataSnapshot singleSnapshot: dataSnapshot.getChildren()) {
-                    DatabaseReference reference = FirebaseDatabase.getInstance ().getReference ("User Accounts");
-                    Query query = reference.child(firebaseUser.getUid()).child("user").
-                            orderByChild("user_id").equalTo(singleSnapshot.getValue(Likes.class).getUser_id ());
-
-                    query.addListenerForSingleValueEvent (new ValueEventListener () {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                            for(DataSnapshot singleSnapshot: dataSnapshot.getChildren()) {
-                                Log.d(TAG, "Found user by id for likes " + singleSnapshot.getValue(UserInformation.class).getEmail ());
-
-                                listOfUserLikes.append(singleSnapshot.getValue(UserInformation.class).getUsername ());
-                                listOfUserLikes.append(", ");
-
-                                String[] splitUsers = listOfUserLikes.toString().split(",");
-
-                                //User account settings need to be created
-                                if(listOfUserLikes.toString().contains(currentUser.getUsername())) {
-                                    likedByCurrentUser = true;
-                                } else {
-                                    likedByCurrentUser = false;
-                                }
-
-                                int length = splitUsers.length;
-
-                                if(length == 1) {
-
-                                    showUserLikes =  "Liked by " + splitUsers[0];
-
-                                }
-                                else if (length == 2) {
-                                    showUserLikes =  "Liked by " + splitUsers[0] + " and " + splitUsers[1];
-                                }
-                                else if(length == 3) {
-                                    showUserLikes = "Liked by " + splitUsers[0]
-                                            + ", " + splitUsers[1]
-                                            + " and " + splitUsers[2];
-                                }
-
-                                else if(length > 3){
-                                    showUserLikes = "Liked by " + splitUsers[0]
-                                            + ", " + splitUsers[1]
-                                            + ", " + splitUsers[2]
-                                            + " and " + (splitUsers.length - 2) + " others";
-                                }
-
-                                Log.d(TAG, "onDataChange: likes string: " + showUserLikes);
-
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
 
 
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren ()) {
+                    String keyID = singleSnapshot.getKey ();
+                    System.out.println ("Passing through the getCharacterPhotoLikes method");
+                    //case 1 user liked the photo
+                    if (likedByCurrentUser && singleSnapshot.getValue (Likes.class).getUser_id ()
+                            .equals (FirebaseAuth.getInstance ().getCurrentUser ().getUid ())) {
+
+                        //removing the likes when user taps
+                        mainRef.child (currentOC.getUser_id ()).child ("character")
+                                .child (currentOC.getCharacter_id ())
+                                .child ("likes")
+                                .child (keyID).removeValue ();
+
+                        heart.toggleLike ();
+                        getLikeString ();
+
+                    }
+                    //case 2 user did not like the photo
+                    else if (!likedByCurrentUser) {
+                        //add new like when user taps
+                        addNewLikes ();
+                        break;
+
+                    }
+
+                }
+                if (!dataSnapshot.exists ()) {
+                    addNewLikes ();
                 }
             }
 
@@ -257,12 +259,113 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
             }
         });
     }
-    private void likesPost(ShowUserRecyclerView.ShowViewHolder holder) {
+
+    private void addNewLikes() {
+        Log.d ("Adding new likes", "Likes");
+
+        mainRef = FirebaseDatabase.getInstance ().getReference ("User Accounts");
+
+        String newLikeId = mainRef.push ().getKey ();
+        Likes likes = new Likes ();
+        likes.setUser_id (newLikeId);
+
+        mainRef.child (currentOC.getUser_id ()).child ("character")
+                .child (currentOC.getCharacter_id ())
+                .child ("likes")
+                .child (newLikeId).setValue (likes);
+
+        heart.toggleLike ();
+        getLikeString ();
+
+    }
+
+    private void getLikeString() {
+        DatabaseReference reference = FirebaseDatabase.getInstance ().getReference ("User Accounts");
+        Query query = reference.child (currentOC.getUser_id ()).child ("character").
+                orderByChild (currentOC.getCharacter_id ()).equalTo ("likes");
+
+        query.addListenerForSingleValueEvent (new ValueEventListener () {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                listOfUserLikes = new StringBuilder ();
+
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren ()) {
+                    DatabaseReference reference = FirebaseDatabase.getInstance ().getReference ("User Accounts");
+                    Query query = reference.child (currentOC.getUser_id ()).child ("character")
+                            .child (currentOC.getCharacter_id ()).child ("likes").
+                                    orderByChild ("user_id").equalTo (singleSnapshot.getValue (Likes.class).getUser_id ());
+
+                    query.addListenerForSingleValueEvent (new ValueEventListener () {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            for (DataSnapshot singleSnapshot : dataSnapshot.getChildren ()) {
+                                Log.d (TAG, "Found user by id for likes " + singleSnapshot.getValue (UserInformation.class).getEmail ());
+
+                                listOfUserLikes.append (singleSnapshot.getValue (UserInformation.class).getUsername ());
+                                listOfUserLikes.append (", ");
+
+                                String[] splitUsers = listOfUserLikes.toString ().split (",");
+
+                                //User account settings need to be created
+                                if (listOfUserLikes.toString ().contains (currentUser.getUsername ())) {
+                                    likedByCurrentUser = true;
+                                } else {
+                                    likedByCurrentUser = false;
+                                }
+
+                                int length = splitUsers.length;
+
+                                if (length == 1) {
+
+                                    showUserLikes = "Liked by " + splitUsers[0];
+
+                                } else if (length == 2) {
+                                    showUserLikes = "Liked by " + splitUsers[0] + " and " + splitUsers[1];
+                                } else if (length == 3) {
+                                    showUserLikes = "Liked by " + splitUsers[0]
+                                            + ", " + splitUsers[1]
+                                            + " and " + splitUsers[2];
+                                } else if (length > 3) {
+                                    showUserLikes = "Liked by " + splitUsers[0]
+                                            + ", " + splitUsers[1]
+                                            + ", " + splitUsers[2]
+                                            + " and " + (splitUsers.length - 2) + " others";
+                                }
+
+                                Log.d (TAG, "onDataChange: likes string: " + showUserLikes);
+
+                            }
+
+                            if (!dataSnapshot.exists ()) {
+                                showUserLikes = "";
+                                likedByCurrentUser = false;
+                                likesPost ();
+                            }
+                        }
+
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void likesPost() {
+        //setupwidget
         if(likedByCurrentUser == true) {
 
-            holder.likeButton.setVisibility (View.GONE);
-            holder.redLikeButton.setVisibility(View.VISIBLE);
-            holder.redLikeButton.setOnTouchListener (new View.OnTouchListener () {
+            mainHolder.likeButton.setVisibility (View.GONE);
+            mainHolder.redLikeButton.setVisibility(View.VISIBLE);
+            mainHolder.redLikeButton.setOnTouchListener (new View.OnTouchListener () {
                 @Override
                 public boolean onTouch(View v, MotionEvent motionEvent) {
                     Log.d (TAG, "Red heart is touched.");
@@ -271,9 +374,9 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
             });
         }
         else {
-            holder.redLikeButton.setVisibility (View.GONE);
-            holder.redLikeButton.setVisibility(View.VISIBLE);
-            holder.likeButton.setOnTouchListener (new View.OnTouchListener () {
+            mainHolder.redLikeButton.setVisibility (View.GONE);
+            mainHolder.likeButton.setVisibility(View.VISIBLE);
+            mainHolder.likeButton.setOnTouchListener (new View.OnTouchListener () {
                 @Override
                 public boolean onTouch(View v, MotionEvent motionEvent) {
                     Log.d (TAG, "White heart is touched.");
@@ -283,7 +386,8 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
             });
 
         }
-        }
+    }
+
     private void getCurrentUser(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User Account");
         Query query = reference
@@ -296,7 +400,7 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
                 for ( DataSnapshot singleSnapshot :  dataSnapshot.getChildren()){
                     currentUser = singleSnapshot.getValue(UserInformation.class);
                 }
-                getLikeString();
+                // getLikesString();
             }
 
             @Override

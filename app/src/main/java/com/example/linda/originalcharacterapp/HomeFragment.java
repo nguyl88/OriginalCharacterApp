@@ -1,8 +1,10 @@
 package com.example.linda.originalcharacterapp;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,10 +29,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 public class HomeFragment extends Fragment {
 
@@ -44,8 +51,12 @@ public class HomeFragment extends Fragment {
     private FirebaseDatabase firebaseDatabase;
     private FirebaseUser user;
     private final String TAG = "User";
+    private  static int RESULT_LOAD_IMAGE = 1;
+    private Uri selectedImage = null;
+    private Uri downloadImage;
+    private StorageReference storageReference;
 
-    private ImageView imageSelection;
+
     private ImageView userProfile;
 
     public static HomeFragment newInstance() {
@@ -74,6 +85,7 @@ public class HomeFragment extends Fragment {
         reference = FirebaseDatabase.getInstance().getReference("User Account");
 
         String userid=user.getUid();
+
         reference.child(userid).orderByChild(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener () {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -92,6 +104,14 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        userProfile.setOnClickListener (new View.OnClickListener () {
+            @Override
+            public void onClick(View view) {
+               chooseImage();
+            }
+
+        });
+
         mRecyclerView.setHasFixedSize(true);
         // mLayoutManager = new LinearLayoutManager (this.getActivity());
         mRecyclerView.setLayoutManager(new GridLayoutManager (this.getActivity(),1));
@@ -100,6 +120,35 @@ public class HomeFragment extends Fragment {
         retrieveUserOCs ();
 
 }
+
+    private void updateUserImage() {
+        storageReference = FirebaseStorage.getInstance ().getReference ();
+
+
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult (requestCode, resultCode, data);
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
+            selectedImage = data.getData ();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap (getActivity().getApplicationContext ().getContentResolver (),
+                        selectedImage);
+                userProfile.setImageBitmap (bitmap);
+            } catch (IOException e) {
+                e.printStackTrace ();
+            }
+            userProfile.setImageURI (selectedImage);  //set the imageview in the box
+        }
+
+    }
+    private void chooseImage() {
+        Intent galleryIntent = new Intent (Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        galleryIntent.setType ("image/*");
+        startActivityForResult (galleryIntent, RESULT_LOAD_IMAGE);
+    }
         public void retrieveUserOCsByChild() {
         String user_id = user.getUid();
         System.out.println("Revoke the character reference ");
@@ -177,8 +226,6 @@ public class HomeFragment extends Fragment {
                                 break;
                             }
                     }
-                    String file2 ="http://ghostfinder101.weebly.com/uploads/1/9/7/3/19737887/published/gear-of-diamond_1.png?1541826567";
-                    userOCs.add(new CharacterInformation("34", "124",file2, "Diamond", "2002", "Diamond Angel", "Narcissistic","Jahara(friend)", "Flight, shard attacks", "lIVES IN MAIN"));
                     mAdapter = new RecycleViewAdapter (userOCs, getActivity()); //where the image is inserted
                     mRecyclerView.setAdapter(mAdapter);
                 }

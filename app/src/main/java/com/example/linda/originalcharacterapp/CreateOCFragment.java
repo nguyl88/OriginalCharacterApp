@@ -36,7 +36,6 @@ import com.google.firebase.storage.UploadTask;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -49,6 +48,7 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
     private String nameValue, ageValue, speciesValue, familyValue, personalityValue, powerValue, bioValue;
     private Uri selectedImage = null;
     private Uri downloadImage;
+    private String characterId;
     private Bitmap compressedImageFile;
 
     //Firebase
@@ -126,19 +126,15 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
             {
                 e.printStackTrace();
             }
-            uploadImage.setImageURI (selectedImage);  //set the imageview in the box
+            uploadImage.setImageURI (selectedImage);
         }
 
     }
 
     private void chooseImage() {
        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-      //  Intent intent = new Intent();
         galleryIntent.setType("image/*");
-   //     galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult (galleryIntent,RESULT_LOAD_IMAGE);
-
-      //  startActivityForResult(Intent.createChooser(galleryIntent, "Select Picture"), RESULT_LOAD_IMAGE);
     }
 
     private void uploadOC() {
@@ -155,8 +151,8 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
 
         if (!TextUtils.isEmpty (nameValue) && selectedImage != null) {
           //  StorageReference fileReference = storageReference.child(System.currentTimeMillis()+ "." + getFileExtension(downloadImage));
-
-            storageReference = storageReference.child("characterimage").child (currentUserID + "/" + UUID.randomUUID ().toString ()+ ".png");
+            characterId = databaseReference.child("characters").push ().getKey(); //creates unique random id
+            storageReference = storageReference.child("characterimage").child (currentUserID).child(characterId + ".png");
 
                 storageReference.putFile (selectedImage)
 
@@ -164,12 +160,10 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                downloadImage = taskSnapshot.getUploadSessionUri ();
-
                              //  String downloadPhoto = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
                                 storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri downloadPhotoUrl) {
-                                        String characterId = databaseReference.child("characters").push ().getKey(); //creates unique random id
                                 CharacterInformation newCharacter =  new CharacterInformation (currentUserID, characterId, downloadPhotoUrl.toString(),nameValue, ageValue, speciesValue,
                                         personalityValue, familyValue, powerValue, bioValue);
 
