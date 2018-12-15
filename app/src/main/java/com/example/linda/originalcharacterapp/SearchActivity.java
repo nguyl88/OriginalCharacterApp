@@ -33,7 +33,6 @@ import java.util.List;
 public class SearchActivity extends ListFragment implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
 
     List<UserInformation> allUsers;
- //  private ArrayAdapter<String> mAdapter; //replace with recycler view adapter to pull all user ocs from the database
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -89,8 +88,6 @@ public class SearchActivity extends ListFragment implements SearchView.OnQueryTe
         searchView.setQueryHint("Search");
 
         super.onCreateOptionsMenu(menu, inflater);
-
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -125,7 +122,6 @@ public class SearchActivity extends ListFragment implements SearchView.OnQueryTe
         mAdapter = new SearchRecyclerView (allUsers,mContext);
         System.out.println("REsetting adapter...");
         mRecyclerView.setAdapter(mAdapter);
-        //setListAdapter(mAdapter);
     }
 
     @Override
@@ -170,6 +166,5 @@ public class SearchActivity extends ListFragment implements SearchView.OnQueryTe
             }
         });
 
-        //setListAdapter (mAdapter);
      }
     }

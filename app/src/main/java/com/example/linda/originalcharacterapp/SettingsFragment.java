@@ -217,7 +217,7 @@ public class SettingsFragment extends Fragment {
             public void onClick(View view) {
                 if (firebaseAuth.getCurrentUser () != null)
                     firebaseAuth.signOut ();
-                Intent intent = new Intent (getActivity (), Login.class); //returns to login page
+                Intent intent = new Intent (getActivity (), Login.class);
                 startActivity (intent);
             }
         });

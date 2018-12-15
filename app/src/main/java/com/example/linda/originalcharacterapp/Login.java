@@ -41,9 +41,7 @@ public class Login extends AppCompatActivity implements  View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-
         mPasswordView = (EditText) findViewById(R.id.password);
         Button mEmailSignInButton = (Button)findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(this);

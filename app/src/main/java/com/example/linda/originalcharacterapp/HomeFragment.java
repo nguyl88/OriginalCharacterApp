@@ -13,6 +13,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,16 +24,19 @@ import android.widget.Toast;
 
 import com.example.linda.originalcharacterapp.model.CharacterInformation;
 import com.example.linda.originalcharacterapp.utils.RecycleViewAdapter;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -56,7 +62,6 @@ public class HomeFragment extends Fragment {
     private Uri downloadImage;
     private StorageReference storageReference;
 
-
     private ImageView userProfile;
 
     public static HomeFragment newInstance() {
@@ -71,9 +76,29 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.action_button, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_changeImage:
+                if(selectedImage != null) {
+                    updateUserImage ();
+                }
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated (savedInstanceState);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        setHasOptionsMenu(true);
         user = FirebaseAuth.getInstance().getCurrentUser();
         firebaseAuth = FirebaseAuth.getInstance();
         reference = FirebaseDatabase.getInstance().getReference();
@@ -81,8 +106,9 @@ public class HomeFragment extends Fragment {
 
         userProfile = getView().findViewById (R.id.user_profile_image);
         currentUsername = getView().findViewById(R.id.current_username);
-        mRecyclerView = (RecyclerView) getView().findViewById (R.id.imagegallery); //recycler view)
+        mRecyclerView = getView().findViewById (R.id.imagegallery); //recycler view)
         reference = FirebaseDatabase.getInstance().getReference("User Account");
+        storageReference = FirebaseStorage.getInstance ().getReference ();
 
         String userid=user.getUid();
 
@@ -90,7 +116,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (user != null) {
-                    //  Display username
                     String currentUser= dataSnapshot.child("users").child("username").getValue().toString();
                     String currentImage = dataSnapshot.child("users").child("user_photo_id").getValue().toString();
                     currentUsername.setText(currentUser);
@@ -104,27 +129,76 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        userProfile.setOnClickListener (new View.OnClickListener () {
+        userProfile.setOnClickListener ( new View.OnClickListener () {
             @Override
             public void onClick(View view) {
-               chooseImage();
+                chooseImage();
             }
-
         });
 
         mRecyclerView.setHasFixedSize(true);
         // mLayoutManager = new LinearLayoutManager (this.getActivity());
         mRecyclerView.setLayoutManager(new GridLayoutManager (this.getActivity(),1));
        userOCs = new ArrayList<> ();
-       // retrieveUserOCsByChild();
         retrieveUserOCs ();
 
 }
 
     private void updateUserImage() {
-        storageReference = FirebaseStorage.getInstance ().getReference ();
+        storageReference =  storageReference.child ("user_image").child (firebaseAuth.getUid () +".png");
+        reference = FirebaseDatabase.getInstance().getReference("User Account");
 
+        storageReference.delete (); //delete that image first
 
+       // StorageReference newImage =  storageReference.child ("user_image").child (firebaseAuth.getUid () +".png");
+
+        storageReference.putFile (selectedImage)
+
+                .addOnSuccessListener (new OnSuccessListener<UploadTask.TaskSnapshot> () {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        downloadImage = taskSnapshot.getUploadSessionUri ();
+                        storageReference.getDownloadUrl ().addOnSuccessListener (new OnSuccessListener<Uri> () {
+                            @Override
+                            public void onSuccess(Uri downloadPhotoUrl) {
+                                String photoReference = downloadPhotoUrl.toString();
+
+                                reference.child(firebaseAuth.getUid()).child("users").child("user_photo_id").removeValue();
+                                reference.child(firebaseAuth.getUid()).child("users").child("user_photo_id")
+                                        .setValue(photoReference).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        System.out.println("NEW PHOTO URL SUCCESSFULLY updated to the database!");
+
+                                    }
+                                })
+                                        .addOnFailureListener(new OnFailureListener () {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                System.out.println("Updating images to database has failed");
+                                                return;
+                                            }
+                                        });
+                            }
+                        });
+
+                        Toast.makeText(getActivity (), "Photo Updated", Toast.LENGTH_SHORT).show();
+
+                    }
+                })
+                .addOnFailureListener (new OnFailureListener () {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println ("User image failed");
+                    }
+                })
+                .addOnProgressListener (new OnProgressListener<UploadTask.TaskSnapshot> () {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred () / taskSnapshot
+                                .getTotalByteCount ());
+                    }
+                });
 
     }
 
@@ -140,7 +214,7 @@ public class HomeFragment extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace ();
             }
-            userProfile.setImageURI (selectedImage);  //set the imageview in the box
+            userProfile.setImageURI (selectedImage);
         }
 
     }
@@ -149,62 +223,6 @@ public class HomeFragment extends Fragment {
         galleryIntent.setType ("image/*");
         startActivityForResult (galleryIntent, RESULT_LOAD_IMAGE);
     }
-        public void retrieveUserOCsByChild() {
-        String user_id = user.getUid();
-        System.out.println("Revoke the character reference ");
-            reference = FirebaseDatabase.getInstance().getReference("User Account");
-            reference.child(user_id).child("character").addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                    for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
-                        Log.d(TAG, "onChildAdded:" + dataSnapshot.getKey());
-                        String ocKey = dataSnapshot.getKey();
-                     //   CharacterInformation newOC = dataSnapshot.getValue(CharacterInformation.class);
-                        userOCs.add(dataSnapshot.getValue(CharacterInformation.class));
-                    }
-
-                    String file2 ="http://ghostfinder101.weebly.com/uploads/1/9/7/3/19737887/published/gear-of-diamond_1.png?1541826567";
-                    userOCs.add(new CharacterInformation("34", "124",file2, "Diamond", "2002", "Diamond Angel", "Narcissistic","Jahara(friend)", "Flight, shard attacks", "lIVES IN MAIN"));
-                    //userOCs.notifyDataSetChanged();
-                    mAdapter = new RecycleViewAdapter (userOCs, getActivity()); //where the image is inserted
-                    mRecyclerView.setAdapter(mAdapter);
-
-                }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
-                    Log.d(TAG, "onChildChanged:" + dataSnapshot.getKey());
-                    CharacterInformation newOC = dataSnapshot.getValue(CharacterInformation.class);
-                    String ocKey = dataSnapshot.getKey();
-
-                    // ...
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    Log.d(TAG, "onChildRemoved:" + dataSnapshot.getKey());
-                    String ocKey = dataSnapshot.getKey();
-
-                    // ...
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
-                    Log.d(TAG, "onChildMoved:" + dataSnapshot.getKey());
-                    CharacterInformation newOC = dataSnapshot.getValue(CharacterInformation.class);
-                    String ocKey = dataSnapshot.getKey();
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.w(TAG, "postComments:onCancelled", databaseError.toException());
-                    Toast.makeText(getContext (), "Failed to load comments.",
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
-
-        }
 
         public void retrieveUserOCs() {
             System.out.println("Revoke the character reference ");

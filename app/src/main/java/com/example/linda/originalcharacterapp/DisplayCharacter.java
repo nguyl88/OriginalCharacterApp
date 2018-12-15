@@ -148,7 +148,6 @@ public class DisplayCharacter extends Fragment {
   public void editOC(final ImageButton editButton, View view, String characterid, String userid) {
         String currentUserId = userid;
         String nameValue, ageValue, speciesValue, familyValue, personalityValue, powerValue, bioValue;
-         // Query query = characterRef.child (currentUserId).child ("character").child(characterid);
         nameValue = cName.getText().toString();
         ageValue = cAge.getText().toString();
         speciesValue = cSpecies.getText().toString();

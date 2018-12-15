@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,7 @@ public class OtherProfileActivity extends Fragment {
     private List <CharacterInformation>userOCs;
     private static final String USER_INFO = "USERINFO";
     private RecyclerView.LayoutManager mLayoutManager;
+    private ImageView profileImage;
 
     private DatabaseReference reference;
     private FirebaseDatabase firebaseDatabase;
@@ -59,7 +62,8 @@ public class OtherProfileActivity extends Fragment {
         reference = FirebaseDatabase.getInstance().getReference();
         firebaseDatabase = FirebaseDatabase.getInstance();
 
-        otherUser = (TextView) getView().findViewById(R.id.otheruser_title);
+        otherUser =  getView().findViewById(R.id.otheruser_title);
+        profileImage = getView().findViewById(R.id.otheruser_profile_image);
         mRecyclerView = (RecyclerView)getView().findViewById (R.id.recycler_other_user);
         reference = FirebaseDatabase.getInstance().getReference("User Account");
 
@@ -69,9 +73,12 @@ public class OtherProfileActivity extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    //  Display username
-                    String currentUser= dataSnapshot.child("users").child("username").getValue().toString();
-                    otherUser.setText(currentUser);
+
+                String currentUser= dataSnapshot.child("users").child("username").getValue().toString();
+                String currentImage= dataSnapshot.child("users").child("user_photo_id").getValue().toString();
+
+                otherUser.setText(currentUser);
+                Picasso.get ().load (currentImage).placeholder (R.mipmap.ic_launcher).into (profileImage);
             }
 
             @Override

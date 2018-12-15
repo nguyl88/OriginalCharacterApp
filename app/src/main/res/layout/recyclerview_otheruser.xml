@@ -20,7 +20,6 @@
         android:id="@+id/otheruser_image"
         android:layout_width="match_parent"
         android:layout_height="252dp"
-        android:layout_marginBottom="32dp"
         android:layout_weight="1"
         android:background="@color/colorPrimaryDark"
         android:scaleType="fitCenter"
@@ -33,14 +32,14 @@
 
         <LinearLayout
             android:layout_width="155dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/likesButton"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_weight="1"
                 android:adjustViewBounds="false"
                 android:visibility="visible"
@@ -49,7 +48,7 @@
             <ImageView
                 android:id="@+id/redLikeButton"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_weight="1"
                 android:adjustViewBounds="false"
                 android:visibility="invisible"
@@ -74,7 +73,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/user_ocname"

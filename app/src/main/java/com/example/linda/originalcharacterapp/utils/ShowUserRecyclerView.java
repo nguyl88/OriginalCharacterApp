@@ -128,6 +128,8 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
         holder.cFamily.setText (oc.getCharacterFamily ());
         holder.cBio.setText (oc.getCharacterBio ());
 
+
+
         getLikeString (); //display buttons
 
         System.out.println ("Binding images..." + oc.getCharacter_id ());
@@ -147,15 +149,16 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
 
         @Override
         public boolean onDoubleTap(MotionEvent e) {
-            //   getCharacterPhotoLikes(image, holder);
+        /*    //   getCharacterPhotoLikes(image, holder);
             DatabaseReference reference = FirebaseDatabase.getInstance ().getReference ("User Accounts");
-            Query query = reference.child (currentOC.getUser_id ())
+           *//* Query query = reference.child (currentOC.getUser_id ())
                     .child ("character")
                     .child (currentOC.getCharacter_id ())
-                    .child ("likes");
+                    .child ("likes");*//*
             //  .orderByChild(currentOC.getCharacter_id ()).equalTo(R.string.likes);
 
             Log.d ("Double tap on the heart", "Likes");
+            Query query  = reference.child(currentOC.getUser_id()).child("likedposts").child(currentOC.getCharacter_id());
 
             query.addListenerForSingleValueEvent (new ValueEventListener () {
                 @Override
@@ -197,7 +200,8 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
-            });
+            });*/
+            addNewLikes ();
             heart.toggleLike ();
             return true;
 
@@ -266,13 +270,14 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
         mainRef = FirebaseDatabase.getInstance ().getReference ("User Accounts");
 
         String newLikeId = mainRef.push ().getKey ();
-        Likes likes = new Likes ();
-        likes.setUser_id (newLikeId);
+       Likes likes = new Likes (currentUser.getUser_id ());
 
-        mainRef.child (currentOC.getUser_id ()).child ("character")
-                .child (currentOC.getCharacter_id ())
-                .child ("likes")
-                .child (newLikeId).setValue (likes);
+
+        mainRef.child(currentOC.getUser_id()).child("likedposts").child(currentOC.getCharacter_id())
+               .child(newLikeId).setValue(likes);
+
+     //  mainRef.child (currentOC.getUser_id ()).child ("character").child (currentOC.getCharacter_id ())
+              //  .child ("likes").child (newLikeId).setValue (likes);
 
         heart.toggleLike ();
         getLikeString ();
@@ -281,9 +286,10 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
 
     private void getLikeString() {
         DatabaseReference reference = FirebaseDatabase.getInstance ().getReference ("User Accounts");
-        Query query = reference.child (currentOC.getUser_id ()).child ("character").
-                orderByChild (currentOC.getCharacter_id ()).equalTo ("likes");
+     //   Query query = reference.child (currentOC.getUser_id ()).child ("character").
+       //         orderByChild (currentOC.getCharacter_id ()).equalTo ("likes");
 
+        Query query  = reference.child(currentOC.getUser_id()).child("likedposts").child(currentOC.getCharacter_id());
         query.addListenerForSingleValueEvent (new ValueEventListener () {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -291,10 +297,12 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
 
                 for (DataSnapshot singleSnapshot : dataSnapshot.getChildren ()) {
                     DatabaseReference reference = FirebaseDatabase.getInstance ().getReference ("User Accounts");
-                    Query query = reference.child (currentOC.getUser_id ()).child ("character")
+                   /* Query query = reference.child (currentOC.getUser_id ()).child ("character")
                             .child (currentOC.getCharacter_id ()).child ("likes").
-                                    orderByChild ("user_id").equalTo (singleSnapshot.getValue (Likes.class).getUser_id ());
+                                    orderByChild ("user_id").equalTo (singleSnapshot.getValue (Likes.class).getUser_id ());*/
 
+                    Query query  = reference.child(currentOC.getUser_id()).child("likedposts").child(currentOC.getCharacter_id())
+                    .orderByChild("user_id").equalTo(singleSnapshot.getValue(Likes.class).getUser_id());
                     query.addListenerForSingleValueEvent (new ValueEventListener () {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -322,15 +330,10 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
 
                                 } else if (length == 2) {
                                     showUserLikes = "Liked by " + splitUsers[0] + " and " + splitUsers[1];
-                                } else if (length == 3) {
+                                } else if (length > 2) {
                                     showUserLikes = "Liked by " + splitUsers[0]
                                             + ", " + splitUsers[1]
                                             + " and " + splitUsers[2];
-                                } else if (length > 3) {
-                                    showUserLikes = "Liked by " + splitUsers[0]
-                                            + ", " + splitUsers[1]
-                                            + ", " + splitUsers[2]
-                                            + " and " + (splitUsers.length - 2) + " others";
                                 }
 
                                 Log.d (TAG, "onDataChange: likes string: " + showUserLikes);
@@ -358,6 +361,10 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
 
             }
         });
+    }
+
+    private void testToggle() {
+
     }
     private void likesPost() {
         //setupwidget

@@ -30,6 +30,7 @@
     <string name="character_id">character_id</string>
     <string name="likes">likes</string>
     <string name="photo_id">photo_id</string>
+    <string name="change_image">Change Image</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -44,4 +45,5 @@
     <string name="title_activity_redo_user">RedoUserActivity</string>
     <string name="current_user">Current User</string>
     <string name="title_activity_user_image_setup">user_image_setup</string>
+    <string name="title_activity_task">TaskActivity</string>
 </resources>
