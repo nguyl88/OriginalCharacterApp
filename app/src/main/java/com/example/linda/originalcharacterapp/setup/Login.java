@@ -1,4 +1,4 @@
-package com.example.linda.originalcharacterapp;
+package com.example.linda.originalcharacterapp.setup;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.linda.originalcharacterapp.MainUserActivity;
+import com.example.linda.originalcharacterapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -32,7 +34,6 @@ public class Login extends AppCompatActivity implements  View.OnClickListener {
     private View mProgressView;
     private View mLoginFormView;
     private Button registerButton;
- //  ProgressBar progressBar;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseUser user = FirebaseAuth.getInstance ().getCurrentUser ();
@@ -46,7 +47,6 @@ public class Login extends AppCompatActivity implements  View.OnClickListener {
         Button mEmailSignInButton = (Button)findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(this);
 
-        //Register button form
         Button registerButton = (Button)findViewById(R.id.register_now);
         registerButton.setOnClickListener(this);
 
@@ -119,12 +119,9 @@ public class Login extends AppCompatActivity implements  View.OnClickListener {
             return;
         }
 
-    //    progressBar.setVisibility(View.VISIBLE);
-
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult> () {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-           //     progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()) {
                     finish();
                     Intent intent = new Intent(Login.this, MainUserActivity.class);
@@ -142,12 +139,11 @@ public class Login extends AppCompatActivity implements  View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser != null) {
             finish();
             startActivity(new Intent(this, MainUserActivity.class));
-    }
+        }
 
     }
 }

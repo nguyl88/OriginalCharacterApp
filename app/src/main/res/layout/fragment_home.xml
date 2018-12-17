@@ -46,26 +46,20 @@
                 android:textSize="30sp"
                 app:fontFamily="cursive" />
 
+            <TextView
+                android:id="@+id/usernocharacters"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:text="No characters added yet! Add a character!" />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/imagegallery"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
 
             </android.support.v7.widget.RecyclerView>
-
-            <GridView
-                android:id="@+id/user_grid_view"
-                android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:layout_weight="1"
-                android:columnWidth="90dp"
-                android:gravity="center"
-                android:horizontalSpacing="10dp"
-                android:numColumns="auto_fit"
-                android:stretchMode="columnWidth"
-                android:verticalSpacing="10dp">
-
-            </GridView>
 
         </LinearLayout>
     </ScrollView>

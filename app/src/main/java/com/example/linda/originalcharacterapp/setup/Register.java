@@ -1,4 +1,4 @@
-package com.example.linda.originalcharacterapp;
+package com.example.linda.originalcharacterapp.setup;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +15,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.linda.originalcharacterapp.data.UserHelper;
+import com.example.linda.originalcharacterapp.MainUserActivity;
+import com.example.linda.originalcharacterapp.R;
 import com.example.linda.originalcharacterapp.model.UserInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -31,7 +32,6 @@ import com.google.firebase.database.FirebaseDatabase;
 public class Register extends AppCompatActivity implements View.OnClickListener {
 
     private EditText txtUsername, txtEmail, txtPassword;
-    private UserHelper databaseHelper;
     private static final String TAG = "Register";
     private static int RESULT_LOAD_IMAGE = 1;
     private TextView existAccount;
@@ -58,7 +58,6 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         txtUsername = (EditText) findViewById (R.id.txt_username);
         txtEmail = (EditText) findViewById (R.id.txt_email);
         txtPassword = (EditText) findViewById (R.id.txt_password);
-        databaseHelper = new UserHelper (this);
         existAccount = findViewById (R.id.existing_account);
         progressBar = findViewById (R.id.progress_register);
 
@@ -183,15 +182,6 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         Intent intent = new Intent (Register.this, Login.class);
         startActivity (intent);
     }
-
-    public void createUserData(UserInformation newUser) {
-        boolean insertData = databaseHelper.insertUserData (newUser);
-
-        if (insertData) {
-            toastMessage ("New user successfully inserted");
-        } else toastMessage ("New user did not insert. ");
-    }
-
 
     private void toastMessage(String message) {
         Toast.makeText (this, message, Toast.LENGTH_SHORT).show ();

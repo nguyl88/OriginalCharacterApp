@@ -45,12 +45,14 @@
             android:hint="Change Username"
             android:inputType="textPersonName" />
 
-        <Button
-            android:id="@+id/change_username_button"
-            style="@android:style/Widget.DeviceDefault.Light.Button.Inset"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Change Username" />
+            <Button
+                android:id="@+id/change_username_button"
+                style="@android:style/Widget.DeviceDefault.Light.Button.Inset"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="30dp"
+                android:background="@color/colorAccent"
+                android:text="Change Username" />
 
         <EditText
             android:id="@+id/txt_email"
@@ -68,12 +70,14 @@
             android:inputType="textPassword"
             android:hint="Confirm Password" />
 
-        <Button
-            android:id="@+id/change_email_button"
-            style="@android:style/Widget.DeviceDefault.Light.Button.Inset"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Change Email" />
+            <Button
+                android:id="@+id/change_email_button"
+                style="@android:style/Widget.DeviceDefault.Light.Button.Inset"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="30dp"
+                android:background="@color/colorAccent"
+                android:text="Change Email" />
 
         <EditText
             android:id="@+id/txt_password"
@@ -99,27 +103,34 @@
             android:inputType="textPassword"
             android:hint="Confirm Password" />
 
-        <Button
-            android:id="@+id/change_password_button"
-            style="@android:style/Widget.DeviceDefault.Light.Button.Inset"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Change Password" />
+            <Button
+                android:id="@+id/change_password_button"
+                style="@android:style/Widget.DeviceDefault.Light.Button.Inset"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="30dp"
+                android:background="@color/colorAccent"
+                android:text="Change Password" />
 
-        <Button
-            android:id="@+id/deleteAccountbutton"
-            style="@android:style/Widget.DeviceDefault.Light.Button.Inset"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Delete Account" />
+            <Button
+                android:id="@+id/deleteAccountbutton"
+                style="@android:style/Widget.DeviceDefault.Light.Button.Inset"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorAccent"
+                android:text="Delete Account"
+                tools:layout_margin="30dp" />
 
 
-        <Button
-            android:id="@+id/logoutbutton"
-            style="@android:style/Widget.DeviceDefault.Light.Button.Inset"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Log Out" />
+            <Button
+                android:id="@+id/logoutbutton"
+                style="@android:style/Widget.DeviceDefault.Light.Button.Inset"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:background="@color/colorAccent"
+                android:text="Log Out" />
 
         </LinearLayout>
     </ScrollView>

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.linda.originalcharacterapp.model.CharacterInformation;
-import com.example.linda.originalcharacterapp.utils.WarningFragment;
+import com.example.linda.originalcharacterapp.setup.Login;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -256,8 +255,7 @@ public class SettingsFragment extends Fragment {
 
 
     }
-    // This method is called when the fragment is no longer connected to the Activity
-    // Any references saved in onAttach should be nulled out here to prevent memory leaks.
+
     @Override
     public void onDetach() {
         super.onDetach ();
@@ -271,10 +269,6 @@ public class SettingsFragment extends Fragment {
             this.listener = (MainUserActivity) context;
         }
     }
-    private void deleteConfirmation(View view) {
-        DialogFragment confirmation = new WarningFragment();
-        confirmation.show(getChildFragmentManager (), "Confirmation");
 
-    }
 
 }

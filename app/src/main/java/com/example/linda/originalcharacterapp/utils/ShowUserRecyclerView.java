@@ -87,8 +87,10 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
             cBio = (TextView) view.findViewById (R.id.user_displayBio);
             likeButton = view.findViewById (R.id.likesButton);
             redLikeButton = view.findViewById (R.id.redLikeButton);
-
             likedUsersList = view.findViewById (R.id.userlikes);
+
+           // redLikeButton.setVisibility (View.GONE);
+           // likeButton.setVisibility(View.VISIBLE);
 
         }
 
@@ -129,9 +131,9 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
         holder.cBio.setText (oc.getCharacterBio ());
 
 
+        getLikeString ();
 
-        getLikeString (); //display buttons
-
+        //testToggle(holder);
         System.out.println ("Binding images..." + oc.getCharacter_id ());
     }
 
@@ -202,6 +204,7 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
                 }
             });*/
             addNewLikes ();
+
             heart.toggleLike ();
             return true;
 
@@ -270,14 +273,14 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
         mainRef = FirebaseDatabase.getInstance ().getReference ("User Accounts");
 
         String newLikeId = mainRef.push ().getKey ();
-       Likes likes = new Likes (currentUser.getUser_id ());
+        Likes likes = new Likes (currentUser.getUser_id ());
 
 
-        mainRef.child(currentOC.getUser_id()).child("likedposts").child(currentOC.getCharacter_id())
-               .child(newLikeId).setValue(likes);
+        mainRef.child (currentOC.getUser_id ()).child ("likedposts").child (currentOC.getCharacter_id ())
+                .child (newLikeId).setValue (likes);
 
-     //  mainRef.child (currentOC.getUser_id ()).child ("character").child (currentOC.getCharacter_id ())
-              //  .child ("likes").child (newLikeId).setValue (likes);
+        //  mainRef.child (currentOC.getUser_id ()).child ("character").child (currentOC.getCharacter_id ())
+        //  .child ("likes").child (newLikeId).setValue (likes);
 
         heart.toggleLike ();
         getLikeString ();
@@ -286,10 +289,10 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
 
     private void getLikeString() {
         DatabaseReference reference = FirebaseDatabase.getInstance ().getReference ("User Accounts");
-     //   Query query = reference.child (currentOC.getUser_id ()).child ("character").
-       //         orderByChild (currentOC.getCharacter_id ()).equalTo ("likes");
+        //   Query query = reference.child (currentOC.getUser_id ()).child ("character").
+        //         orderByChild (currentOC.getCharacter_id ()).equalTo ("likes");
 
-        Query query  = reference.child(currentOC.getUser_id()).child("likedposts").child(currentOC.getCharacter_id());
+        Query query = reference.child (currentOC.getUser_id ()).child ("likedposts").child (currentOC.getCharacter_id ());
         query.addListenerForSingleValueEvent (new ValueEventListener () {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -301,8 +304,8 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
                             .child (currentOC.getCharacter_id ()).child ("likes").
                                     orderByChild ("user_id").equalTo (singleSnapshot.getValue (Likes.class).getUser_id ());*/
 
-                    Query query  = reference.child(currentOC.getUser_id()).child("likedposts").child(currentOC.getCharacter_id())
-                    .orderByChild("user_id").equalTo(singleSnapshot.getValue(Likes.class).getUser_id());
+                    Query query = reference.child (currentOC.getUser_id ()).child ("likedposts").child (currentOC.getCharacter_id ())
+                            .orderByChild ("user_id").equalTo (singleSnapshot.getValue (Likes.class).getUser_id ());
                     query.addListenerForSingleValueEvent (new ValueEventListener () {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -363,15 +366,12 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
         });
     }
 
-    private void testToggle() {
-
-    }
     private void likesPost() {
         //setupwidget
-        if(likedByCurrentUser == true) {
+        if (likedByCurrentUser == true) {
 
             mainHolder.likeButton.setVisibility (View.GONE);
-            mainHolder.redLikeButton.setVisibility(View.VISIBLE);
+            mainHolder.redLikeButton.setVisibility (View.VISIBLE);
             mainHolder.redLikeButton.setOnTouchListener (new View.OnTouchListener () {
                 @Override
                 public boolean onTouch(View v, MotionEvent motionEvent) {
@@ -379,10 +379,9 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
                     return gestureDetector.onTouchEvent (motionEvent);
                 }
             });
-        }
-        else {
+        } else {
             mainHolder.redLikeButton.setVisibility (View.GONE);
-            mainHolder.likeButton.setVisibility(View.VISIBLE);
+            mainHolder.likeButton.setVisibility (View.VISIBLE);
             mainHolder.likeButton.setOnTouchListener (new View.OnTouchListener () {
                 @Override
                 public boolean onTouch(View v, MotionEvent motionEvent) {
@@ -394,6 +393,28 @@ public class ShowUserRecyclerView extends RecyclerView.Adapter<ShowUserRecyclerV
 
         }
     }
+
+  /*  private void testToggle(ShowUserRecyclerView.ShowViewHolder holder) {
+        holder.likeButton.setOnTouchListener (new View.OnTouchListener () {
+            @Override
+            public boolean onTouch(View v, MotionEvent motionEvent) {
+                Log.d (TAG, "White heart is touched.");
+                return gestureDetector.onTouchEvent (motionEvent);
+            }
+        });
+        holder.redLikeButton.setOnTouchListener(new View.OnTouchListener()
+
+    {
+        @Override
+        public boolean onTouch (View v, MotionEvent motionEvent){
+        Log.d (TAG, "Red heart is touched.");
+        return gestureDetector.onTouchEvent (motionEvent);
+            }
+          });
+
+    }*/
+
+
 
     private void getCurrentUser(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User Account");

@@ -21,7 +21,7 @@ import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.linda.originalcharacterapp.DisplayCharacter;
+import com.example.linda.originalcharacterapp.EditCharacter;
 import com.example.linda.originalcharacterapp.R;
 import com.example.linda.originalcharacterapp.model.CharacterInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -145,7 +145,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
                    AppCompatActivity activity = (AppCompatActivity) view.getContext ();
                     Bundle bundle = new Bundle();
-                    DisplayCharacter ocFragment = DisplayCharacter.newInstance(oc);
+                    EditCharacter ocFragment = EditCharacter.newInstance(oc);
                     System.out.println("Character instantiated " + oc.getCharacter_id ());
                     activity.getSupportFragmentManager ().beginTransaction ().replace (R.id.fragment_container, ocFragment).commit ();
 
@@ -175,7 +175,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         public void deleteOC(final String characterid, final String userid, final int position) {
             final String currentUserID = userid;
             StorageReference storageRef = storage.getReference();
-            StorageReference toDeleteRef = storageRef.child("characterimage").child(currentUserID ).child(characterid  + ".png");
+            StorageReference toDeleteRef = storageRef.child("characterimage").child(currentUserID ).child(characterid + ".png");
 
             toDeleteRef.delete().addOnSuccessListener(new OnSuccessListener<Void> () {
                 @Override
@@ -191,7 +191,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                                 notifyItemRemoved(position);
                                 notifyItemRangeChanged(position, mDataset.size());
 
-                                Log.d("Delete Ad", "Character has been deleted");
+                                Log.d("Delete Ad", "Character deleted");
                                 Toast.makeText(context,
                                         "Character deleted",
                                         Toast.LENGTH_SHORT).show();

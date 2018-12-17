@@ -30,7 +30,7 @@
                 android:layout_height="150dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:background="#009de1">
+                android:background="@android:color/holo_green_light">
 
             </ImageView>
 
@@ -123,11 +123,13 @@
 
             <Button
                 android:id="@+id/submit_character_button"
+                style="@android:style/Widget.DeviceDefault.Light.Button.Inset"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="30dp"
                 android:layout_weight="1"
-                android:text="Create Character"
-               />
+                android:background="@color/colorAccent"
+                android:text="Create Character" />
 
 
 

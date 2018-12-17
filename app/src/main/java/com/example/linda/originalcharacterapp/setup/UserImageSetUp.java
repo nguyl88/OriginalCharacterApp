@@ -1,4 +1,4 @@
-package com.example.linda.originalcharacterapp;
+package com.example.linda.originalcharacterapp.setup;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.example.linda.originalcharacterapp.MainUserActivity;
+import com.example.linda.originalcharacterapp.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;

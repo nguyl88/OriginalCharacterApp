@@ -19,7 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
-public class DisplayCharacter extends Fragment {
+public class EditCharacter extends Fragment {
 
     private Context context;
     private EditText cName, cAge, cSpecies,cPersonality,cFamily,cBiography,cPowers;
@@ -33,11 +33,11 @@ public class DisplayCharacter extends Fragment {
     private FirebaseUser firebaseUser;
 
     private OnFragmentInteractionListener mListener;
-    public DisplayCharacter() {
+    public EditCharacter() {
 
     }
-    public static final DisplayCharacter newInstance(CharacterInformation character) {
-        DisplayCharacter fragment = new DisplayCharacter ();
+    public static final EditCharacter newInstance(CharacterInformation character) {
+        EditCharacter fragment = new EditCharacter ();
         System.out.println("trasferring character SUCCESS " + character.getCharacter_id () );
         Bundle args = new Bundle ();
         args.putParcelable (CHARACTER_INFO, character);

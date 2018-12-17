@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.linda.originalcharacterapp.model.CharacterInformation;
+import com.example.linda.originalcharacterapp.setup.Login;
 import com.example.linda.originalcharacterapp.utils.RecycleViewAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -51,7 +52,6 @@ public class HomeFragment extends Fragment {
     private TextView currentUsername;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference reference;
     private FirebaseDatabase firebaseDatabase;
@@ -61,6 +61,7 @@ public class HomeFragment extends Fragment {
     private Uri selectedImage = null;
     private Uri downloadImage;
     private StorageReference storageReference;
+    private TextView noOCs;
 
     private ImageView userProfile;
 
@@ -105,6 +106,7 @@ public class HomeFragment extends Fragment {
         firebaseDatabase = FirebaseDatabase.getInstance();
 
         userProfile = getView().findViewById (R.id.user_profile_image);
+        noOCs=  (TextView)getView().findViewById(R.id.usernocharacters);
         currentUsername = getView().findViewById(R.id.current_username);
         mRecyclerView = getView().findViewById (R.id.imagegallery); //recycler view)
         reference = FirebaseDatabase.getInstance().getReference("User Account");
@@ -149,9 +151,6 @@ public class HomeFragment extends Fragment {
         reference = FirebaseDatabase.getInstance().getReference("User Account");
 
         storageReference.delete (); //delete that image first
-
-       // StorageReference newImage =  storageReference.child ("user_image").child (firebaseAuth.getUid () +".png");
-
         storageReference.putFile (selectedImage)
 
                 .addOnSuccessListener (new OnSuccessListener<UploadTask.TaskSnapshot> () {
@@ -227,21 +226,24 @@ public class HomeFragment extends Fragment {
         public void retrieveUserOCs() {
             System.out.println("Revoke the character reference ");
             reference = FirebaseDatabase.getInstance().getReference("User Account");
-            // final Query query = characterReference;
             reference.child(user.getUid()).child("character").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     ////Loop 1 to go through all the child nodes of characters
                     for(DataSnapshot characterSnapshot : dataSnapshot.getChildren()){
                             if (dataSnapshot.getValue() != null ) {
+
+                                noOCs.setVisibility (View.INVISIBLE);
                                 CharacterInformation oc = characterSnapshot.getValue (CharacterInformation.class);
                                 String ocKey = characterSnapshot.getKey ();
                                 System.out.println ("Adding ocs: " + ocKey + " Name: " + oc.getCharacterName ());
                                 Log.d ("TAGGING OCS", ocKey + " / " + oc.getCharacterName ());
                                 userOCs.add (oc);
-                                Toast.makeText (getContext(), "Adding images " + oc.getCharacterName (), Toast.LENGTH_SHORT).show ();
-                            } else { //if user haven't added any characters
+                            } else if (dataSnapshot.getValue() == null){ //if user haven't added any characters
+                                noOCs.setVisibility(View.VISIBLE);
                                 break;
+                            } else {
+                                System.out.println("User has no characers");
                             }
                     }
                     mAdapter = new RecycleViewAdapter (userOCs, getActivity()); //where the image is inserted
@@ -262,10 +264,9 @@ public class HomeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if(currentUser == null) {
-                startActivity(new Intent (getActivity(), Login.class));
+            startActivity(new Intent (getActivity(), Login.class));
 
         }
     }

@@ -1,11 +1,11 @@
 package com.example.linda.originalcharacterapp;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,36 +18,77 @@ public class LikesFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    public static TabLayout tabLayout;
+    public static ViewPager viewPager;
+    public static int numOfTabs = 2;
 
     private ImageView imageSelection;
 
-    public static HomeFragment newInstance() {
-        HomeFragment f = new HomeFragment ();
+    public static LikesFragment newInstance() {
+        LikesFragment f = new LikesFragment ();
         return f;
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, container, false);
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated (savedInstanceState);
 
-        mRecyclerView = (RecyclerView) getView().findViewById (R.id.imagegallery);
-        // use this setting to improve performance if you know that changes in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(true);
+    }
 
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager (this.getActivity());
-        // mRecyclerView.setLayoutManager (mLayoutManager);
-        mRecyclerView.setLayoutManager(new GridLayoutManager (this.getActivity(),2));
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_likes, container, false);
+        tabLayout = (TabLayout) v.findViewById(R.id.tabs);
+        viewPager = (ViewPager) v.findViewById(R.id.viewpager);
 
-        // specify an adapter (see also next example)
-    //    mAdapter = new RecycleViewAdapter (testImages);
-      //  mRecyclerView.setAdapter(mAdapter);
+        viewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
 
+        tabLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                tabLayout.setupWithViewPager(viewPager);
+            }
+        });
+
+        return v;
+
+    }
+    class MyAdapter extends FragmentPagerAdapter {
+
+        public MyAdapter(FragmentManager fm) {
+            super (fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                   return new SearchActivity();
+                case 1:
+                    return new HomeFragment ();
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return numOfTabs;
+
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+
+            switch (position) {
+                case 0:
+                    String search = "Search";
+                    return search;
+                case 1:
+                    String category = "Likes";
+                    return category;
+            }
+            return null;
+        }
     }
 }

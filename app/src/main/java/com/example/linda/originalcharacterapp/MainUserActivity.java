@@ -11,10 +11,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.linda.originalcharacterapp.setup.Login;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainUserActivity extends AppCompatActivity implements DisplayCharacter.OnFragmentInteractionListener {
+public class MainUserActivity extends AppCompatActivity implements EditCharacter.OnFragmentInteractionListener {
     private Fragment fragment;
     private FirebaseAuth firebaseAuth;
 

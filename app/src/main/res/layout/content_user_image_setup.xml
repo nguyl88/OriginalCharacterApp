@@ -23,6 +23,8 @@
         android:id="@+id/uploadImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@android:style/Widget.DeviceDefault.Light.Button.Inset"
+        android:background="@color/colorAccent"
         android:text="UPLOAD IMAGE" />
 
 </LinearLayout>

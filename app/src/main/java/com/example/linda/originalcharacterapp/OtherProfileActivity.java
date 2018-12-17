@@ -40,10 +40,12 @@ public class OtherProfileActivity extends Fragment {
     private static final String USER_INFO = "USERINFO";
     private RecyclerView.LayoutManager mLayoutManager;
     private ImageView profileImage;
+    private TextView noCharacters;
 
     private DatabaseReference reference;
     private FirebaseDatabase firebaseDatabase;
     private FirebaseUser firebaseUser;
+
 
     public static final OtherProfileActivity newInstance(UserInformation user) {
         OtherProfileActivity fragment = new OtherProfileActivity ();
@@ -63,6 +65,7 @@ public class OtherProfileActivity extends Fragment {
         firebaseDatabase = FirebaseDatabase.getInstance();
 
         otherUser =  getView().findViewById(R.id.otheruser_title);
+        noCharacters=  getView().findViewById(R.id.nocharacters);
         profileImage = getView().findViewById(R.id.otheruser_profile_image);
         mRecyclerView = (RecyclerView)getView().findViewById (R.id.recycler_other_user);
         reference = FirebaseDatabase.getInstance().getReference("User Account");
@@ -73,12 +76,19 @@ public class OtherProfileActivity extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
+                if(dataSnapshot.getValue() !=null) {
+                    String currentUser = dataSnapshot.child ("users").child ("username").getValue ().toString ();
+                    String currentImage = dataSnapshot.child ("users").child ("user_photo_id").getValue ().toString ();
 
-                String currentUser= dataSnapshot.child("users").child("username").getValue().toString();
-                String currentImage= dataSnapshot.child("users").child("user_photo_id").getValue().toString();
-
-                otherUser.setText(currentUser);
-                Picasso.get ().load (currentImage).placeholder (R.mipmap.ic_launcher).into (profileImage);
+                    otherUser.setText (currentUser);
+                    Picasso.get ().load (currentImage).placeholder (R.mipmap.ic_launcher).into (profileImage);
+                }
+                else if (dataSnapshot.getValue() == null){
+                    noCharacters.setVisibility (View.VISIBLE);
+                }
+                else {
+                    System.out.println("No characters");
+                }
             }
 
             @Override
@@ -122,6 +132,7 @@ public class OtherProfileActivity extends Fragment {
                 ////Loop 1 to go through all the child nodes of characters
                 for(DataSnapshot characterSnapshot : dataSnapshot.getChildren()){
                     if (dataSnapshot.getValue() != null ) {
+                        noCharacters.setVisibility (View.GONE);
                         CharacterInformation oc = characterSnapshot.getValue (CharacterInformation.class);
                         String ocKey = characterSnapshot.getKey ();
                         System.out.println ("Adding ocs: " + ocKey + " Name: " + oc.getCharacterName ());
