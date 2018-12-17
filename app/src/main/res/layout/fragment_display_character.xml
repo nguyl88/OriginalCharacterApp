@@ -28,6 +28,7 @@
                 android:layout_width="100dp"
                 android:layout_height="150dp"
                 android:layout_gravity="center"
+                android:layout_margin="10dp"
                 android:layout_weight="1">
 
             </ImageView>
@@ -119,7 +120,7 @@
                 android:textSize="12sp"
                 />
 
-            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="371dp"
                 android:layout_height="wrap_content">
 
@@ -128,12 +129,11 @@
                     android:id="@+id/editButton"
                     android:layout_width="156dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
+                    android:layout_margin="20dp"
                     android:layout_weight="1"
                     android:background="@android:color/holo_purple"
                     android:src="@android:drawable/ic_menu_edit" />
-            </RelativeLayout>
+            </LinearLayout>
 
 
         </LinearLayout>
