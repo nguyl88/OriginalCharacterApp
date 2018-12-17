@@ -71,7 +71,6 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated (savedInstanceState);
 
-       // storageReference = FirebaseStorage.getInstance(); //storage initilization
         storage = FirebaseStorage.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         //storageReference =  FirebaseStorage.getInstance().getReference();
@@ -90,7 +89,6 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
         cBiography = (EditText) getView().findViewById (R.id.characterBios);
 
         uploadImage.setOnClickListener (this);
-        // buttonLoadImage.setOnClickListener (this);
         buttonLoadImage.setOnClickListener(new View.OnClickListener () {
             @Override
             public void onClick(View view) {
@@ -150,7 +148,7 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
 
 
         if (!TextUtils.isEmpty (nameValue) && selectedImage != null) {
-          //  StorageReference fileReference = storageReference.child(System.currentTimeMillis()+ "." + getFileExtension(downloadImage));
+
             characterId = databaseReference.child("characters").push ().getKey(); //creates unique random id
             storageReference = storageReference.child("characterimage").child (currentUserID).child(characterId + ".png");
 
@@ -160,7 +158,6 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                downloadImage = taskSnapshot.getUploadSessionUri ();
-                             //  String downloadPhoto = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
                                 storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri downloadPhotoUrl) {
@@ -171,9 +168,8 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
                                 Map<String, Object> childUpdates = new HashMap<> ();
                                 databaseReference.child("User Account").child(currentUserID).child("character").child(characterId).setValue(newCharacter);
 
-                               // childUpdates.put(nameValue, newCharacter);
                                 databaseReference.updateChildren (childUpdates);
-                                Toast.makeText (getActivity (), "Uploaded" + newCharacter.getCharacterName(), Toast.LENGTH_SHORT).show ();
+                                Toast.makeText (getActivity (), "Uploaded " + newCharacter.getCharacterName(), Toast.LENGTH_SHORT).show ();
                             }
                          });
 
@@ -195,7 +191,7 @@ public class CreateOCFragment extends Fragment  implements View.OnClickListener{
 
         }
         else {
-            Toast.makeText (getActivity (), "Character needs name", Toast.LENGTH_SHORT).show ();
+            Toast.makeText (getActivity (), " Character needs name", Toast.LENGTH_SHORT).show ();
         }
     }
 

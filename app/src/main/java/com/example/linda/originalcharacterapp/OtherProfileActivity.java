@@ -40,7 +40,8 @@ public class OtherProfileActivity extends Fragment {
     private static final String USER_INFO = "USERINFO";
     private RecyclerView.LayoutManager mLayoutManager;
     private ImageView profileImage;
-    private TextView noCharacters;
+    private TextView noCharacters, numOfOCs, titlePost;
+    private int numOfPosts;
 
     private DatabaseReference reference;
     private FirebaseDatabase firebaseDatabase;
@@ -66,6 +67,8 @@ public class OtherProfileActivity extends Fragment {
 
         otherUser =  getView().findViewById(R.id.otheruser_title);
         noCharacters=  getView().findViewById(R.id.nocharacters);
+        numOfOCs=  (TextView)getView().findViewById(R.id.other_numOfCharacters);
+        titlePost=  (TextView)getView().findViewById(R.id.other_title_post);
         profileImage = getView().findViewById(R.id.otheruser_profile_image);
         mRecyclerView = (RecyclerView)getView().findViewById (R.id.recycler_other_user);
         reference = FirebaseDatabase.getInstance().getReference("User Account");
@@ -132,6 +135,7 @@ public class OtherProfileActivity extends Fragment {
                 ////Loop 1 to go through all the child nodes of characters
                 for(DataSnapshot characterSnapshot : dataSnapshot.getChildren()){
                     if (dataSnapshot.getValue() != null ) {
+                        numOfPosts++;
                         noCharacters.setVisibility (View.GONE);
                         CharacterInformation oc = characterSnapshot.getValue (CharacterInformation.class);
                         String ocKey = characterSnapshot.getKey ();
@@ -142,6 +146,7 @@ public class OtherProfileActivity extends Fragment {
                     } else { //if user haven't added any characters
                         break;
                     }
+                    numOfOCs.setText(String.valueOf(numOfPosts));
                 }
 
                 System.out.println("Setting other user profile adapter success");

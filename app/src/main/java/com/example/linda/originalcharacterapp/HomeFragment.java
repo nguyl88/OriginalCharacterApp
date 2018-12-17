@@ -61,7 +61,8 @@ public class HomeFragment extends Fragment {
     private Uri selectedImage = null;
     private Uri downloadImage;
     private StorageReference storageReference;
-    private TextView noOCs;
+    private TextView noOCs, numOfOCs, titlePost;
+    private int numberOfPosts = 0;
 
     private ImageView userProfile;
 
@@ -107,6 +108,8 @@ public class HomeFragment extends Fragment {
 
         userProfile = getView().findViewById (R.id.user_profile_image);
         noOCs=  (TextView)getView().findViewById(R.id.usernocharacters);
+        numOfOCs=  (TextView)getView().findViewById(R.id.numOfCharacters);
+        titlePost=  (TextView)getView().findViewById(R.id.titlepost);
         currentUsername = getView().findViewById(R.id.current_username);
         mRecyclerView = getView().findViewById (R.id.imagegallery); //recycler view)
         reference = FirebaseDatabase.getInstance().getReference("User Account");
@@ -232,7 +235,7 @@ public class HomeFragment extends Fragment {
                     ////Loop 1 to go through all the child nodes of characters
                     for(DataSnapshot characterSnapshot : dataSnapshot.getChildren()){
                             if (dataSnapshot.getValue() != null ) {
-
+                                numberOfPosts++;
                                 noOCs.setVisibility (View.INVISIBLE);
                                 CharacterInformation oc = characterSnapshot.getValue (CharacterInformation.class);
                                 String ocKey = characterSnapshot.getKey ();
@@ -245,6 +248,8 @@ public class HomeFragment extends Fragment {
                             } else {
                                 System.out.println("User has no characers");
                             }
+
+                            numOfOCs.setText(String.valueOf(numberOfPosts));
                     }
                     mAdapter = new RecycleViewAdapter (userOCs, getActivity()); //where the image is inserted
                     mRecyclerView.setAdapter(mAdapter);

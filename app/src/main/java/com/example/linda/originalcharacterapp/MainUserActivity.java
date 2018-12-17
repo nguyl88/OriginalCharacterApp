@@ -87,7 +87,6 @@ public class MainUserActivity extends AppCompatActivity implements EditCharacter
          }
     @Override
     public void onFragmentInteraction(Uri uri){
-
     }
 
     @Override

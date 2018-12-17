@@ -77,7 +77,7 @@ public class SettingsFragment extends Fragment {
             String newUsername;
             @Override
             public void onClick(View view) {
-                if (txtUsername.getText().toString() != null) {
+                if (txtUsername.getText().toString() != "") {
                     newUsername = txtUsername.getText().toString();
                     reference.child(firebaseUser.getUid()).child("users").child("username").setValue(newUsername);
                     Toast.makeText(getContext(), "Username Change", Toast.LENGTH_SHORT).show();
