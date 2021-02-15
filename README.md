@@ -1,7 +1,7 @@
 # OriginalCharacterApp
-CSE248 Project Idea
+
 ### OriginalCharacterApp ###
-This is my app that is going to be based on a user create and post a character with information. It's inspired by social media.
+This is my app that is going to be based on a user create and post a character with information.
 ### Main Features ###
 -Login, Register, upload user image
 
@@ -49,5 +49,7 @@ The design pattern is Model View Controller. The model are the users, characters
  -Follow other user feature
  
  -Notification feature
+ 
+ -Adding a limit for the number of characters that the user can submit.
 
  
