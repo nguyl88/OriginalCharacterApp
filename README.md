@@ -53,3 +53,4 @@ The design pattern is Model View Controller. The model are the users, characters
  -Adding a limit for the number of characters that the user can submit.
 
  
+ ***The Project is out-of-date. It needs to update to the latest version of Android Studio***
